@@ -73,11 +73,13 @@ export const VerifyBlock = () => {
   return (
     <div className="flex flex-col items-center">
       {!handleVerifyResponse ? (
-        <Button 
-          onClick={handleVerify}
-        >
-          Verify with World ID
-        </Button>
+        <Button
+  onClick={handleVerify}
+  disabled={MiniKit && !MiniKit.isInstalled()}
+  className="w-full bg-[#0088cc] py-4 text-lg font-medium text-white hover:bg-[#0077b3] disabled:bg-[#ccc]"
+>
+  Recommend
+</Button>
       ) : (
         <div className="flex flex-col items-center space-y-2">
           {verified ? (

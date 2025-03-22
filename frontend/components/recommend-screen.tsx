@@ -77,19 +77,17 @@ export function Recommend({ setActiveScreen }: RecommendProps) {
           <p className="mt-2 text-xs text-[#999]">The user will receive an invite to join WPN</p>
         </div>
 
-        <Button
+        {/* <Button
           type="submit"
           disabled={!address}
           className="w-full bg-[#0088cc] py-4 text-lg font-medium text-white hover:bg-[#0077b3] disabled:bg-[#ccc]"
         >
           Recommend
-        </Button>
+        </Button> */}
+        <VerifyBlock />
+
       </form>
 
-      <section className="mt-6 bg-white rounded-xl shadow-md p-6 w-full max-w-xs">
-        <h2 className="text-base font-semibold mb-4 text-[#333]">Verify Identity</h2>
-        <VerifyBlock />
-      </section>
 
       <AnimatePresence>
         {showModal && (
