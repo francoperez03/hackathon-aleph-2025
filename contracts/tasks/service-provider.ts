@@ -125,17 +125,55 @@ task("fulfill", "List all service providers").setAction(
   }
 );
 
-task("report", "Report a corrupted group").setAction(async (_, hre) => {});
+task("report", "Report a corrupted group")
+  .addParam("ip", "The ip address that has been compromised")
+  .setAction(async (args: TaskArguments, hre: HardhatRuntimeEnvironment) => {
+    const { chainId } = await hre.ethers.provider.getNetwork();
+    const serviceProvider = await hre.ethers.getContractAt(
+      "ServiceProvider",
+      await readContractAddressFromIgnition(
+        chainId,
+        "ServiceProvider#ServiceProvider"
+      )
+    );
+
+    const reportTx = await serviceProvider.reportGroupId(
+      generateGroupId(args.ip)
+    );
+    console.log(`Report tx: ${reportTx.hash}`);
+  });
 
 task("recommend", "Recommend a user").setAction(async (_, hre) => {});
 
-task("withdraw", "Withdraw funds from the contract").setAction(
-  async (_, hre) => {}
-);
+task("withdraw", "Withdraw funds from the contract")
+  .addParam("amount", "The amount of tokens to withdraw")
+  .setAction(async (args: TaskArguments, hre: HardhatRuntimeEnvironment) => {
+    const { chainId } = await hre.ethers.provider.getNetwork();
+    const serviceProvider = await hre.ethers.getContractAt(
+      "ServiceProvider",
+      await readContractAddressFromIgnition(
+        chainId,
+        "ServiceProvider#ServiceProvider"
+      )
+    );
 
-task("balance", "Get the balance of the contract").setAction(
-  async (_, hre) => {}
-);
+    const withdrawTx = await serviceProvider.withdraw(args.amount);
+    console.log(`Withdraw tx: ${withdrawTx.hash}`);
+  });
+
+task("balance", "Get the balance of the contract").setAction(async (_, hre) => {
+  const { chainId } = await hre.ethers.provider.getNetwork();
+  const serviceProvider = await hre.ethers.getContractAt(
+    "ServiceProvider",
+    await readContractAddressFromIgnition(
+      chainId,
+      "ServiceProvider#ServiceProvider"
+    )
+  );
+
+  const balance = await serviceProvider.balance();
+  console.log(`Balance: ${balance}`);
+});
 
 async function readContractAddressFromIgnition(chainId: bigint, id: string) {
   const deployed_addresses = require(`../ignition/deployments/chain-${chainId}/deployed_addresses.json`);
