@@ -1,7 +1,6 @@
 import { MiniKit, VerifyCommandInput } from "@worldcoin/minikit-js";
 const forge = require('node-forge');
 
-
 const address = "0x2cfc85d8e48f8eab294be644d9e25c3030863003"
 
 export const recommend = async (props: { addressToRecommend: `0x${string}` }) => {
@@ -47,12 +46,6 @@ export const requestService = async (props: { countryId: string }) => {
 
     return payload;
 };
-
-export const verify = async (props: VerifyCommandInput) => {
-
-    // finish
-    const { finalPayload } = await MiniKit.commandsAsync.verify(props);
-}
 
 function generateRSAKeyPair(): Promise<{ publicKey: string; privateKey: string }> {
     return new Promise((resolve, reject) => {
