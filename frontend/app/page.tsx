@@ -1,14 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { MiniKit } from "@worldcoin/minikit-js";
-import { VerifyBlock } from "@/components/Verify";
-import { PayBlock } from "@/components/Pay";
-import { WalletAuth } from "@/components/WalletAuth";
-import { Login } from "@/components/Login";
 import { AnimatePresence } from "framer-motion";
 import { Connection } from "@/components/connection-screen";
 import { Recommend } from "@/components/recommend-screen";
-import { Navigation } from "@/components/navigation";
 import { Home } from "@/components/home-screen"
 
 export default function App() {
@@ -58,30 +53,3 @@ export default function App() {
   </div>
   );
 }
-
-
-    // <main className="flex min-h-screen flex-col items-center justify-between p-4 md:p-8 lg:p-12 bg-gray-50">
-    //   <div className="w-full max-w-md mx-auto space-y-8 py-8">
-    //     <h1 className="text-2xl font-bold text-center mb-8">WLD 101</h1>
-
-    //     <section className="bg-white rounded-xl shadow-md p-6 transition-all hover:shadow-lg">
-    //       <h2 className="text-xl font-semibold mb-4 text-gray-800">Login</h2>
-    //       <Login />
-    //     </section>
-
-    //     <section className="bg-white rounded-xl shadow-md p-6 transition-all hover:shadow-lg">
-    //       <h2 className="text-xl font-semibold mb-4 text-gray-800">Wallet Auth</h2>
-    //       <WalletAuth />
-    //     </section>
-
-    //     <section className="bg-white rounded-xl shadow-md p-6 transition-all hover:shadow-lg">
-    //       <h2 className="text-xl font-semibold mb-4 text-gray-800">Incognito Action</h2>
-    //       <VerifyBlock />
-    //     </section>
-
-    //     <section className="bg-white rounded-xl shadow-md p-6 transition-all hover:shadow-lg">
-    //       <h2 className="text-xl font-semibold mb-4 text-gray-800">Payment</h2>
-    //       <PayBlock />
-    //     </section>
-    //   </div>
-    // </main>
