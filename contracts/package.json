@@ -1,9 +1,11 @@
 {
   "name": "hardhat-project",
   "scripts": {
+    "test": "hardhat test",
     "deploy-service-provider:hardhat": "hardhat ignition deploy ignition/modules/ServiceProvider.ts --network hardhat --parameters ignition/parameters/hardhat.json",
     "deploy-test-token:hardhat": "hardhat ignition deploy ignition/modules/TestToken.ts --network hardhat",
     "deploy-service-provider:holesky": "hardhat ignition deploy ignition/modules/ServiceProvider.ts --network holesky --parameters ignition/parameters/holesky.json",
+    "wipe-service-provider:holesky": "hardhat ignition wipe chain-17000 ServiceProvider#ServiceProvider",
     "deploy-test-token:holesky": "hardhat ignition deploy ignition/modules/TestToken.ts --network holesky"
   },
   "devDependencies": {
@@ -13,6 +15,7 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.2.0",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "encrypt-rsa": "^3.3.0"
   }
 }

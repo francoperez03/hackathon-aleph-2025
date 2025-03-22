@@ -4,7 +4,6 @@ pragma solidity ^0.8.13;
 import {ByteHasher} from "./ByteHasher.sol";
 import {IWorldID} from "../interfaces/IWorldID.sol";
 
-
 interface IReputationErrors {
     /// @notice Thrown when attempting to reuse a nullifier
     error DuplicateNullifier(uint256 nullifierHash);
@@ -51,7 +50,7 @@ contract Reputation is IReputationErrors, IReputationEvents {
             .hashToField();
     }
 
-    /// @param recommendedUser An arbitrary input from the user, usually the user's wallet address (check README for further details)
+    /// @param recommendedUser An arbitrary input from the user
     /// @param root The root of the Merkle tree (returned by the JS widget).
     /// @param nullifierHash The nullifier hash for this proof, preventing double signaling (returned by the JS widget).
     /// @param proof The zero-knowledge proof that demonstrates the claimer is registered with World ID (returned by the JS widget).
@@ -63,8 +62,9 @@ contract Reputation is IReputationErrors, IReputationEvents {
         uint256[8] calldata proof
     ) internal {
         // First, we make sure this person hasn't done this before
-        if (nullifierHashes[nullifierHash])
+        if (nullifierHashes[nullifierHash]) {
             revert DuplicateNullifier(nullifierHash);
+        }
 
         // We now verify the provided proof is valid and the user is verified by World ID
         worldId.verifyProof(
@@ -77,7 +77,9 @@ contract Reputation is IReputationErrors, IReputationEvents {
         );
 
         // We now record the user has done this, so they can't do it again (proof of uniqueness)
-        nullifierHashes[nullifierHash] = true; 
+        nullifierHashes[nullifierHash] = true;
+
+        // TODO: check if wallet already recommended person
 
         // increment recommendation count
         recommendations[recommendedUser]++;
@@ -87,7 +89,9 @@ contract Reputation is IReputationErrors, IReputationEvents {
     }
 
     /// @dev Get the number of recommendations for a given user
-    function _recommendationsCount(address user) internal view returns (uint256) {
+    function _recommendationsCount(
+        address user
+    ) internal view returns (uint256) {
         // return recommendations[user];
         return 100;
     }

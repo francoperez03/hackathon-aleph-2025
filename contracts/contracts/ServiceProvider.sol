@@ -57,7 +57,7 @@ contract ServiceProvider is Reputation, IServiceProvider {
     /// @inheritdoc IServiceProvider
     function requestService(
         uint256 serviceId,
-        bytes calldata encryptionKey
+        string calldata encryptionKey
     ) external {
         // check if user has enough reputation
         if (_recommendationsCount(msg.sender) < 1) {
@@ -86,7 +86,7 @@ contract ServiceProvider is Reputation, IServiceProvider {
     function fulfillOrder(
         address user,
         bytes32 groupId,
-        bytes calldata encryptedConnectionDetails
+        string calldata encryptedConnectionDetails
     ) external onlyProvider {
         if (userToGroupId[user] != groupId) {
             groupIdToUsers[groupId].push(user);

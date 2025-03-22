@@ -5,12 +5,12 @@ interface IServiceProviderEvents {
     event ServiceRequest(
         address indexed user,
         uint256 serviceId,
-        bytes encryptionKey,
+        string encryptionKey,
         uint256 timestamp
     );
     event ServiceFulfilled(
         address indexed user,
-        bytes encryptedConnectionDetails,
+        string encryptedConnectionDetails,
         uint256 expiresAt
     );
     event Withdrawal(address indexed provider, uint256 amount);
@@ -46,7 +46,7 @@ interface IServiceProvider is IServiceProviderEvents, IServiceProviderErrors  {
     /// @param encryptionKey The encryption key for the service
     function requestService(
         uint256 serviceId,
-        bytes calldata encryptionKey
+        string calldata encryptionKey
     ) external;
 
     /// @dev Fulfill orders
@@ -56,7 +56,7 @@ interface IServiceProvider is IServiceProviderEvents, IServiceProviderErrors  {
     function fulfillOrder(
         address user,
         bytes32 groupId,
-        bytes calldata encryptedConnectionDetails
+        string calldata encryptedConnectionDetails
     ) external;
 
     /// @dev Report groupId. Slash reputation of all users in group
