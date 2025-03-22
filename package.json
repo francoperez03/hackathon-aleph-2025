@@ -9,17 +9,26 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-slot": "^1.1.2",
     "@worldcoin/mini-apps-ui-kit-react": "^0.0.6",
     "@worldcoin/minikit-js": "1.6.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "eruda": "^3.2.3",
     "html5-qrcode": "^2.3.8",
+    "framer-motion": "^12.5.0",
     "jose": "^6.0.10",
+    "lucide-react": "^0.483.0",
+    "mini-css-extract-plugin": "^2.9.2",
     "nanoid": "^5.1.4",
     "next": "14.2.6",
     "next-auth": "^4.24.7",
     "qrcode.react": "^4.2.0",
     "react": "^18",
     "react-dom": "^18",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss-animate": "^1.0.7",
     "viem": "^2.23.5"
   },
   "devDependencies": {

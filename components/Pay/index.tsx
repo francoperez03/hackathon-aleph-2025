@@ -91,7 +91,7 @@ export const PayBlock = () => {
 
       <div className="w-full space-y-4">
         <Input
-          label="Recipient Address"
+          // label="Recipient Address"
           value={recipientAddress}
           onChange={(e) => setRecipientAddress(e.target.value)}
           placeholder="0x..."
@@ -99,23 +99,23 @@ export const PayBlock = () => {
 
         <div className="flex gap-4">
           <Select
-            label="Token"
+            // label="Token"
             value={selectedToken}
             onChange={(value) => setSelectedToken(value as Tokens)}
             options={[
               { label: "WLD", value: Tokens.WLD },
               { label: "USDC", value: Tokens.USDCE }
             ]}
-            className="flex-1"
+            // className="flex-1"
           />
 
           <Input
-            label="Amount"
+            // label="Amount"
             type="number"
             value={amount.toString()}
             onChange={(e) => setAmount(parseFloat(e.target.value))}
             placeholder="0.5"
-            className="flex-1"
+            // className="flex-1"
           />
         </div>
       </div>
