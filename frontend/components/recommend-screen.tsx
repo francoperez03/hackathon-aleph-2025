@@ -7,6 +7,7 @@ import { X, User, Check, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QRScannerModal } from "./qr/qr-scanner-modal";
 import { recommend } from "@/app/contracts/service-provider/service-provider";
+import { VerifyBlock } from "./Verify";
 
 interface RecommendProps {
   setActiveScreen: (screen: "home" | "connection" | "recommend") => void;
@@ -111,6 +112,8 @@ export function Recommend({ setActiveScreen }: RecommendProps) {
         >
           Recommend
         </Button>
+         <VerifyBlock />
+
       </form>
 
       <AnimatePresence>
