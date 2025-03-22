@@ -1,115 +1,103 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { ChevronDown, Globe, Shield, Zap, Lock } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { motion } from "framer-motion";
+import { Shield, Zap, Lock, UserPlus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface HomeProps {
-  setActiveScreen: (screen: "home" | "connection" | "recommend") => void
+  setActiveScreen: (screen: "home" | "connection" | "recommend") => void;
 }
 
-const countries = [
-  { name: "United States", code: "US", flag: "🇺🇸" },
-  { name: "Japan", code: "JP", flag: "🇯🇵" },
-  { name: "Germany", code: "DE", flag: "🇩🇪" },
-  { name: "Singapore", code: "SG", flag: "🇸🇬" },
-  { name: "United Kingdom", code: "GB", flag: "🇬🇧" },
-]
-
 export function Home({ setActiveScreen }: HomeProps) {
-  const [selectedCountry, setSelectedCountry] = useState(countries[0])
+  const [featureIndex, setFeatureIndex] = useState(0);
+  const features = [
+    { icon: <Lock className="h-6 w-6 text-[#0088cc]" />, title: "Privacy", text: "Stay anonymous, your data is yours." },
+    { icon: <Zap className="h-6 w-6 text-[#0088cc]" />, title: "Speed", text: "Fast, stable, and unrestricted." },
+    { icon: <Shield className="h-6 w-6 text-[#0088cc]" />, title: "Community", text: "A trusted network for digital freedom." },
+  ];
 
   return (
     <motion.div
-      className="flex h-full w-full flex-col items-center px-6 pt-12 pb-24 overflow-y-auto"
+      className="relative flex h-full w-full flex-col items-center px-6 pt-12 pb-24 overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="mb-6 text-center">
+      <button
+        className="absolute top-6 right-6 flex items-center text-[#0088cc] hover:text-[#0077b3] transition"
+        onClick={() => setActiveScreen("recommend")}
+      >
+        <UserPlus className="h-6 w-6" />
+      </button>
+
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="mb-6 text-center"
+      >
         <h1 className="text-5xl font-bold tracking-tight text-[#333]">
           <span className="text-[#0088cc]">WPN</span>
         </h1>
-        <p className="mt-2 text-sm text-[#666]">Decentralized Private Network</p>
-      </div>
+        <p className="mt-2 text-sm text-[#666]">Access beyond borders</p>
+      </motion.div>
 
-      {/* Hero section */}
-      <div className="w-full max-w-xs mb-8">
-        <div className="bg-[#f5f9ff] rounded-xl p-5 text-center">
-          <div className="flex justify-center mb-3">
-            <div className="bg-[#0088cc] rounded-full p-2">
-              <Shield className="h-6 w-6 text-white" />
-            </div>
-          </div>
-          <h2 className="text-lg font-semibold text-[#333] mb-2">Secure Your Connection</h2>
-          <p className="text-sm text-[#666] mb-4">Keep your data private and secure every time you connect</p>
+      {/* Features Carousel */}
+      <motion.div
+        className="w-full max-w-xs mb-8 flex flex-col items-center text-center"
+        key={featureIndex}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -20 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <div className="flex items-center justify-center w-14 h-14 bg-[#f5f9ff] rounded-full mb-3">
+          {features[featureIndex].icon}
         </div>
-      </div>
+        <h2 className="text-lg font-semibold text-[#333]">{features[featureIndex].title}</h2>
+        <p className="text-sm text-[#666] mt-1">{features[featureIndex].text}</p>
+      </motion.div>
 
-      {/* Features */}
-      <div className="w-full max-w-xs mb-8">
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-white rounded-lg p-3 border border-[#eee] shadow-sm">
-            <div className="flex items-center mb-2">
-              <Lock className="h-4 w-4 text-[#0088cc] mr-2" />
-              <span className="text-sm font-medium text-[#333]">Privacy</span>
-            </div>
-            <p className="text-xs text-[#666]">End-to-end encrypted connection</p>
-          </div>
-          <div className="bg-white rounded-lg p-3 border border-[#eee] shadow-sm">
-            <div className="flex items-center mb-2">
-              <Zap className="h-4 w-4 text-[#0088cc] mr-2" />
-              <span className="text-sm font-medium text-[#333]">Speed</span>
-            </div>
-            <p className="text-xs text-[#666]">High-speed global network</p>
-          </div>
+      {/* Auto-slide for features */}
+      <motion.div
+        className="absolute bottom-28 flex space-x-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.3 }}
+      >
+        {features.map((_, i) => (
+          <motion.div
+            key={i}
+            className={`w-2 h-2 rounded-full ${i === featureIndex ? "bg-[#0088cc]" : "bg-gray-300"}`}
+            animate={{ scale: i === featureIndex ? 1.2 : 1 }}
+          />
+        ))}
+      </motion.div>
+
+      {/* Feature Rotation */}
+      <motion.div
+        className="absolute"
+        animate={{ opacity: [1, 1, 0], x: [0, 0, -20] }}
+        transition={{ duration: 3, repeat: Infinity, repeatDelay: 1 }}
+        onAnimationComplete={() => setFeatureIndex((prev) => (prev + 1) % features.length)}
+      />
+
+      {/* Call to Action */}
+      <footer className="absolute bottom-0 w-full bg-white py-6 flex flex-col items-center shadow-md">
+        <div className="w-full max-w-xs">
+          <Button
+            className="w-full bg-[#0088cc] py-6 text-lg text-white hover:bg-[#0077b3] shadow-lg transition-transform active:scale-95"
+            onClick={() => setActiveScreen("connection")}
+          >
+            Connect Now
+          </Button>
+          <p className="text-xs text-center text-[#999] mt-3">
+            Secure & fast access anywhere.
+          </p>
         </div>
-      </div>
-
-      <div className="mb-8 w-full max-w-xs">
-        <p className="mb-2 text-xs font-medium text-[#666]">SELECT LOCATION</p>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="w-full justify-between border-[#ddd] bg-white py-4 text-left text-[#333] hover:bg-[#f5f5f5]"
-            >
-              <div className="flex items-center">
-                <Globe className="mr-2 h-4 w-4 text-[#0088cc]" />
-                <span className="mr-1">{selectedCountry.flag}</span>
-                <span>{selectedCountry.name}</span>
-              </div>
-              <ChevronDown className="h-4 w-4 text-[#0088cc]" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[240px] border-[#ddd] bg-white">
-            {countries.map((country) => (
-              <DropdownMenuItem
-                key={country.code}
-                className="cursor-pointer py-2 text-[#333] hover:bg-[#f5f5f5]"
-                onClick={() => setSelectedCountry(country)}
-              >
-                <span className="mr-2">{country.flag}</span>
-                {country.name}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      <div className="w-full max-w-xs">
-        <Button
-          className="w-full bg-[#0088cc] py-6 text-xl font-bold text-white hover:bg-[#0077b3] shadow-md"
-          onClick={() => setActiveScreen("connection")}
-        >
-          Enter
-        </Button>
-        <p className="text-xs text-center text-[#999] mt-3">By continuing, you agree to our <span className="text-[#0088cc]">Terms and Conditions</span></p>
-      </div>
+      </footer>
     </motion.div>
-  )
+  );
 }
-

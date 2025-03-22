@@ -54,7 +54,6 @@ export default function App() {
         {activeScreen === "recommend" && <Recommend key="recommend" setActiveScreen={setActiveScreen} />}
       </AnimatePresence>
 
-      <Navigation activeScreen={activeScreen} setActiveScreen={setActiveScreen} />
     </div>
   </div>
   );

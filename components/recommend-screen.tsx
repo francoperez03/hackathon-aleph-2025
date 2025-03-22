@@ -1,10 +1,9 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, User, Check } from "lucide-react"
+import { X, User, Check, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface RecommendProps {
@@ -35,12 +34,20 @@ export function Recommend({ setActiveScreen }: RecommendProps) {
 
   return (
     <motion.div
-      className="flex h-full w-full flex-col items-center justify-center px-6 pt-16 pb-24"
+      className="relative flex h-full w-full flex-col items-center justify-center px-6 pt-16 pb-24"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
+      {/* Back Button */}
+      <button
+        className="absolute top-6 left-6 flex items-center text-[#0088cc] hover:text-[#0077b3] transition"
+        onClick={() => setActiveScreen("home")}
+      >
+        <ArrowLeft className="h-6 w-6" />
+      </button>
+
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold text-[#333]">Recommend a User</h1>
         <p className="mt-1 text-xs text-[#666]">Invite to the private network</p>
@@ -138,4 +145,3 @@ export function Recommend({ setActiveScreen }: RecommendProps) {
     </motion.div>
   )
 }
-
