@@ -113,4 +113,27 @@ describe("ServiceProvider", function () {
 
     assert((await serviceProvider.recommendationsCount(other.address)) == 1n);
   });
+
+  it("report e2e", async () => {
+    const { serviceProvider, customer, other, provider } = await loadFixture(
+      deploymentFixture
+    );
+
+    await serviceProvider
+      .connect(other)
+      .recommend(customer.address, 0n, 0n, [0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n]);
+
+    assert((await serviceProvider.recommendationsCount(other.address)) == 1n);
+
+    await serviceProvider
+      .connect(customer)
+      .requestService(1, Buffer.from("publicKey").toString("base64"));
+
+    const groupId = generateGroupId("abc");
+    await serviceProvider.batchFulfill([0n], [groupId], ["abc"]);
+
+    await serviceProvider.connect(provider).reportGroupId(groupId);
+
+    assert((await serviceProvider.recommendationsCount(other.address)) == 0n);
+  });
 });

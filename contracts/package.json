@@ -3,6 +3,7 @@
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
+    "lint": "solhint 'contracts/**/*.sol'",
     "deploy-service-provider:hardhat": "hardhat ignition deploy ignition/modules/ServiceProvider.ts --network hardhat --parameters ignition/parameters/hardhat.json",
     "deploy-test-token:hardhat": "hardhat ignition deploy ignition/modules/TestToken.ts --network hardhat",
     "deploy-service-provider:holesky": "hardhat ignition deploy ignition/modules/ServiceProvider.ts --network holesky --parameters ignition/parameters/holesky.json",
@@ -17,6 +18,7 @@
   "dependencies": {
     "@openzeppelin/contracts": "^5.2.0",
     "dotenv": "^16.4.7",
-    "encrypt-rsa": "^3.3.0"
+    "encrypt-rsa": "^3.3.0",
+    "solhint": "^5.0.5"
   }
 }
