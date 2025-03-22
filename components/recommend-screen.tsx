@@ -1,36 +1,37 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { X, User, Check, ArrowLeft } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import type React from "react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, User, Check, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { VerifyBlock } from "./Verify";
 
 interface RecommendProps {
-  setActiveScreen: (screen: "home" | "connection" | "recommend") => void
+  setActiveScreen: (screen: "home" | "connection" | "recommend") => void;
 }
 
 export function Recommend({ setActiveScreen }: RecommendProps) {
-  const [address, setAddress] = useState("")
-  const [showModal, setShowModal] = useState(false)
-  const [confirmed, setConfirmed] = useState(false)
+  const [address, setAddress] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (address) {
-      setShowModal(true)
+      setShowModal(true);
     }
-  }
+  };
 
   const handleConfirm = () => {
-    setConfirmed(true)
+    setConfirmed(true);
     setTimeout(() => {
-      setShowModal(false)
-      setAddress("")
-      setConfirmed(false)
-      setActiveScreen("home")
-    }, 2000)
-  }
+      setShowModal(false);
+      setAddress("");
+      setConfirmed(false);
+      setActiveScreen("home");
+    }, 2000);
+  };
 
   return (
     <motion.div
@@ -40,7 +41,6 @@ export function Recommend({ setActiveScreen }: RecommendProps) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Back Button */}
       <button
         className="absolute top-6 left-6 flex items-center text-[#0088cc] hover:text-[#0077b3] transition"
         onClick={() => setActiveScreen("home")}
@@ -85,6 +85,11 @@ export function Recommend({ setActiveScreen }: RecommendProps) {
           Recommend
         </Button>
       </form>
+
+      <section className="mt-6 bg-white rounded-xl shadow-md p-6 w-full max-w-xs">
+        <h2 className="text-base font-semibold mb-4 text-[#333]">Verify Identity</h2>
+        <VerifyBlock />
+      </section>
 
       <AnimatePresence>
         {showModal && (
@@ -143,5 +148,5 @@ export function Recommend({ setActiveScreen }: RecommendProps) {
         )}
       </AnimatePresence>
     </motion.div>
-  )
+  );
 }
