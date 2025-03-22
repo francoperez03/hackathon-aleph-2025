@@ -1,83 +1,139 @@
 "use client"
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { Copy, ExternalLink } from "lucide-react"
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
+import { Power } from "lucide-react"
 
 interface ConnectionProps {
   setActiveScreen: (screen: "home" | "connection" | "recommend") => void
 }
 
 export function Connection({ setActiveScreen }: ConnectionProps) {
-  const [copied, setCopied] = useState(false)
-  const vpnUrl = "wpn://connect.x8j2k9.wpn.network"
+  const [isActive, setIsActive] = useState(false)
+  const [connectionState, setConnectionState] = useState(0)
+  const [pulseCount, setPulseCount] = useState(0)
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(vpnUrl)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+  const connectionStates = ["Finding connection...", "Waiting response...", "Establishing secure channel..."]
+
+  useEffect(() => {
+    if (isActive) {
+      const stateInterval = setInterval(() => {
+        setConnectionState((prev) => (prev + 1) % 3)
+      }, 1000)
+
+      const redirectTimer = setTimeout(() => {
+        window.location.href = "wpn://open"
+
+        setTimeout(() => {
+          setIsActive(false) // Resetear estado al inicial
+          setConnectionState(0)
+        }, 500)
+      }, 3000)
+
+      return () => {
+        clearInterval(stateInterval)
+        clearTimeout(redirectTimer)
+      }
+    }
+  }, [isActive])
+
+  useEffect(() => {
+    if (isActive) {
+      const pulseInterval = setInterval(() => {
+        setPulseCount((prev) => prev + 1)
+      }, 800)
+
+      return () => clearInterval(pulseInterval)
+    }
+  }, [isActive])
+
+  const handleButtonClick = () => {
+    setIsActive(true)
+    setPulseCount(0)
   }
 
   return (
     <motion.div
-      className="flex h-full w-full flex-col items-center justify-center px-6 pt-16 pb-24"
+      className="flex h-full w-full flex-col items-center justify-center px-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-[#333]">URL</h1>
-        <p className="mt-1 text-xs text-[#666]">Your secure connection</p>
+      <div className="relative flex items-center justify-center mb-12">
+        {/* Sonar animation rings */}
+        <AnimatePresence>
+          {isActive &&
+            [...Array(3)].map((_, i) => (
+              <motion.div
+                key={`ring-${i}-${pulseCount}`}
+                className="absolute rounded-full border-2 border-[#0088cc]"
+                initial={{ width: 80, height: 80, opacity: 0.8 }}
+                animate={{
+                  width: [80, 200],
+                  height: [80, 200],
+                  opacity: [0.6, 0],
+                  borderWidth: [2, 1],
+                }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  duration: 2,
+                  delay: i * 0.4,
+                  ease: "easeOut",
+                }}
+              />
+            ))}
+        </AnimatePresence>
+
+        <motion.div whileTap={{ scale: 0.95 }} className="relative z-10">
+          <Button
+            className={`h-20 w-20 rounded-full transition-all duration-500 ${
+              isActive ? "bg-[#0088cc] text-white" : "bg-white border-2 border-[#0088cc] text-[#0088cc]"
+            }`}
+            onClick={handleButtonClick}
+            disabled={isActive}
+          >
+            <motion.div
+              animate={isActive ? { scale: [1, 1.1, 1] } : {}}
+              transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
+              className="w-10 h-10 flex items-center justify-center"
+            >
+              {/* Icono ON/OFF */}
+              <Power className={`h-10 w-10 ${isActive ? "text-white" : "text-[#0088cc]"}`} />
+            </motion.div>
+          </Button>
+        </motion.div>
       </div>
 
-      <div className="mb-12 w-full max-w-xs">
-        <div className="relative">
-          <div className="flex items-center rounded-lg border border-[#ddd] bg-white p-4">
-            <input
-              type="text"
-              value={vpnUrl}
-              readOnly
-              className="w-full bg-transparent text-sm text-[#333] focus:outline-none"
-            />
-            <button onClick={handleCopy} className="ml-2 rounded p-1 text-[#0088cc] hover:bg-[#f5f5f5]">
-              {copied ? <span className="text-xs text-green-600">Copied!</span> : <Copy className="h-4 w-4" />}
-            </button>
-          </div>
-          <div className="mt-2 flex items-center justify-between text-xs">
-            <span className="text-[#666]">Secure Connection</span>
-            <a href="#" className="flex items-center text-[#0088cc] hover:text-[#0077b3]">
-              <span className="mr-1">Details</span>
-              <ExternalLink className="h-3 w-3" />
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-12 w-full max-w-xs">
-        <div className="mb-2 flex items-center justify-between">
-          <p className="text-xs font-medium text-[#666]">TIME REMAINING</p>
-          <p className="text-xs font-medium text-[#333]">78%</p>
-        </div>
-        <div className="h-2 w-full overflow-hidden rounded-full bg-[#eee]">
-          <div className="h-full bg-[#0088cc]" style={{ width: "78%" }} />
-        </div>
-        <div className="mt-1 flex justify-between text-xs text-[#999]">
-          <span>0 days</span>
-          <span>30 days</span>
-        </div>
-      </div>
-
-      <div className="w-full max-w-xs">
-        <Button
-          className="w-full bg-[#0088cc] py-4 text-lg font-medium text-white hover:bg-[#0077b3]"
-          onClick={() => setActiveScreen("recommend")}
-        >
-          Buy More
-        </Button>
-      </div>
+      {/* Status text */}
+      <motion.div className="text-center" animate={{ opacity: isActive ? 1 : 0.7 }}>
+        <AnimatePresence mode="wait">
+          {isActive ? (
+            <motion.p
+              key={connectionState}
+              className="text-[#0088cc] font-medium"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              {connectionStates[connectionState]}
+            </motion.p>
+          ) : (
+            <motion.p
+              key="default-text"
+              className="text-[#666] text-sm"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              Tap the button to connect
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </motion.div>
   )
 }
-

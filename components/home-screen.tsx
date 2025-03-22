@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { ChevronDown, Globe } from "lucide-react"
+import { ChevronDown, Globe, Shield, Zap, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
@@ -23,20 +23,53 @@ export function Home({ setActiveScreen }: HomeProps) {
 
   return (
     <motion.div
-      className="flex h-full w-full flex-col items-center justify-center px-6 pt-16 pb-24"
+      className="flex h-full w-full flex-col items-center px-6 pt-12 pb-24 overflow-y-auto"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="mb-12 text-center">
+      <div className="mb-6 text-center">
         <h1 className="text-5xl font-bold tracking-tight text-[#333]">
           <span className="text-[#0088cc]">WPN</span>
         </h1>
         <p className="mt-2 text-sm text-[#666]">Decentralized Private Network</p>
       </div>
 
-      <div className="mb-12 w-full max-w-xs">
+      {/* Hero section */}
+      <div className="w-full max-w-xs mb-8">
+        <div className="bg-[#f5f9ff] rounded-xl p-5 text-center">
+          <div className="flex justify-center mb-3">
+            <div className="bg-[#0088cc] rounded-full p-2">
+              <Shield className="h-6 w-6 text-white" />
+            </div>
+          </div>
+          <h2 className="text-lg font-semibold text-[#333] mb-2">Secure Your Connection</h2>
+          <p className="text-sm text-[#666] mb-4">Keep your data private and secure every time you connect</p>
+        </div>
+      </div>
+
+      {/* Features */}
+      <div className="w-full max-w-xs mb-8">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-white rounded-lg p-3 border border-[#eee] shadow-sm">
+            <div className="flex items-center mb-2">
+              <Lock className="h-4 w-4 text-[#0088cc] mr-2" />
+              <span className="text-sm font-medium text-[#333]">Privacy</span>
+            </div>
+            <p className="text-xs text-[#666]">End-to-end encrypted connection</p>
+          </div>
+          <div className="bg-white rounded-lg p-3 border border-[#eee] shadow-sm">
+            <div className="flex items-center mb-2">
+              <Zap className="h-4 w-4 text-[#0088cc] mr-2" />
+              <span className="text-sm font-medium text-[#333]">Speed</span>
+            </div>
+            <p className="text-xs text-[#666]">High-speed global network</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-8 w-full max-w-xs">
         <p className="mb-2 text-xs font-medium text-[#666]">SELECT LOCATION</p>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -69,11 +102,12 @@ export function Home({ setActiveScreen }: HomeProps) {
 
       <div className="w-full max-w-xs">
         <Button
-          className="w-full bg-[#0088cc] py-4 text-lg font-medium text-white hover:bg-[#0077b3]"
+          className="w-full bg-[#0088cc] py-6 text-xl font-bold text-white hover:bg-[#0077b3] shadow-md"
           onClick={() => setActiveScreen("connection")}
         >
-          Connect
+          Enter
         </Button>
+        <p className="text-xs text-center text-[#999] mt-3">By continuing, you agree to our <span className="text-[#0088cc]">Terms and Conditions</span></p>
       </div>
     </motion.div>
   )
