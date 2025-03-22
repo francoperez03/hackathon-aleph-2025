@@ -1,6 +1,5 @@
-import { task } from "hardhat/config";
+import { task, types } from "hardhat/config";
 import { HardhatRuntimeEnvironment, TaskArguments } from "hardhat/types";
-import crypto from "crypto";
 import NodeRSA from "encrypt-rsa";
 import { generateGroupId } from "../lib/utils";
 
@@ -14,6 +13,29 @@ const poolOfKeys = [
   },
 ];
 
+task("approve", "Approve a tokens for the service provider")
+  .addParam("amount", "The amount of tokens to approve")
+  .setAction(async (args: TaskArguments, hre: HardhatRuntimeEnvironment) => {
+    const { chainId } = await hre.ethers.provider.getNetwork();
+    const paymentToken = await hre.ethers.getContractAt(
+      "TestToken",
+      await readContractAddressFromIgnition(
+        chainId,
+        "TestToken#TestToken"
+      )
+    );
+
+    console.log("approving tokens...");
+    const approve = await paymentToken.approve(
+      await readContractAddressFromIgnition(
+        chainId,
+        "ServiceProvider#ServiceProvider"
+      ),
+      hre.ethers.MaxUint256
+    );
+    console.log("approve tx: ", approve.hash);
+  })
+
 task("connect", "Connect to the vpn")
   .addParam("countryId", "The country id")
   .setAction(
@@ -26,27 +48,13 @@ task("connect", "Connect to the vpn")
           "ServiceProvider#ServiceProvider"
         )
       );
-      const paymentToken = await hre.ethers.getContractAt(
-        "TestToken",
-        await readContractAddressFromIgnition(chainId, "TestToken#TestToken")
-      );
-
-      // create keypair
-      const userAddress = (await hre.ethers.provider.getSigner()).address;
-      const { publicKey, privateKey } = nodeRSA.createPrivateAndPublicKeys();
-
-      // approve tokens
-      console.log("approving tokens...");
-      const approve = await paymentToken.approve(
-        await serviceProvider.getAddress(),
-        hre.ethers.MaxUint256
-      );
-      console.log("approve tx: ", approve.hash);
 
       // create requests
       console.log("creating request...");
+      const customer = (await hre.ethers.provider.getSigner()).address;
+      const { publicKey, privateKey } = nodeRSA.createPrivateAndPublicKeys();
       const request = await serviceProvider.requestService(
-        taskArguments.countryId,
+        1,
         Buffer.from(publicKey).toString("base64")
       );
       console.log("request tx: ", request.hash);
@@ -54,19 +62,16 @@ task("connect", "Connect to the vpn")
       // wait for provider to fulfill request
       console.log("waiting for request fulfill...");
       while (true) {
-        const events = await serviceProvider.queryFilter(
-          serviceProvider.filters.ServiceFulfilled()
+        const serviceRequest = await serviceProvider.getServiceRequestForUser(
+          customer
         );
 
-        for (const event of events) {
-          const [user, encryptedConnectionDetails, _expiration] = event.args;
-          if (user !== userAddress) {
-            continue;
-          }
-
-          // decrypt connection details
+        if (
+          serviceRequest.fulfilled &&
+          serviceRequest.expiresAt > Date.now() / 1000
+        ) {
           const decrypted = nodeRSA.decryptStringWithRsaPrivateKey({
-            text: encryptedConnectionDetails,
+            text: serviceRequest.encryptedConnectionDetails,
             privateKey,
           });
           console.log("Your connection details:", decrypted);
@@ -74,6 +79,7 @@ task("connect", "Connect to the vpn")
           return;
         }
 
+        console.log("waiting for request fulfill...");
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
@@ -90,38 +96,46 @@ task("fulfill", "List all service providers").setAction(
       )
     );
 
-    while (true) {
-      const events = await serviceProvider.queryFilter(
-        serviceProvider.filters.ServiceRequest()
-      );
-
-      for (const event of events) {
-        const [user, serviceId, encryptionKey, timestamp] = event.args;
-        console.log("Service request: ", event.args);
-
-        const key = poolOfKeys.find(
-          (k) => k.countryId === serviceId.toString()
-        );
-        if (!key) {
-          console.log("No key found for service id: ", serviceId);
-          continue;
-        }
-
-        const encryptedConnectionDetails =
-          await nodeRSA.encryptStringWithRsaPublicKey({
-            text: key.key,
-            publicKey: Buffer.from(encryptionKey, "base64").toString(),
-          });
-
-        await serviceProvider.fulfillOrder(
-          user,
-          generateGroupId(key.ip),
-          encryptedConnectionDetails
-        );
+    do {
+      // provider get pending orders
+      const requests = await serviceProvider.getUnfulfilledRequests();
+      if (requests.length === 0) {
+        console.log("No pending requests...");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        continue;
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
+      console.log("Found pending requests:", requests.length);
+
+      const response = (await Promise.allSettled(
+        requests.map(async (r) => {
+          const keys = poolOfKeys.filter(
+            (k) => k.countryId === r.serviceId.toString()
+          );
+          const key = keys[Math.floor(Math.random() * keys.length)];
+
+          return {
+            id: r.id,
+            groupId: generateGroupId(key.ip),
+            encryptedConnectionDetails:
+              await nodeRSA.encryptStringWithRsaPublicKey({
+                text: key.key,
+                publicKey: Buffer.from(r.encryptionKey, "base64").toString(),
+              }),
+          };
+        })
+      )).filter((r) => r.status === "fulfilled").map((r) => r.value);
+
+      // provider fulfills
+     const batch =  await serviceProvider.batchFulfill(
+        response.map((r) => r.id),
+        response.map((r) => r.groupId),
+        response.map((r) => r.encryptedConnectionDetails)
+      );
+      await batch.wait();
+      console.log("Batch fulfill tx: ", batch.hash);
+
+    } while (true);
   }
 );
 
@@ -143,7 +157,30 @@ task("report", "Report a corrupted group")
     console.log(`Report tx: ${reportTx.hash}`);
   });
 
-task("recommend", "Recommend a user").setAction(async (_, hre) => {});
+task("recommend", "Recommend a user")
+  .addParam("user", "The user to recommend", undefined, types.string)
+  .setAction(async (args: TaskArguments, hre: HardhatRuntimeEnvironment) => {
+    const { chainId } = await hre.ethers.provider.getNetwork();
+    const serviceProvider = await hre.ethers.getContractAt(
+      "ServiceProvider",
+      await readContractAddressFromIgnition(
+        chainId,
+        "ServiceProvider#ServiceProvider"
+      )
+    );
+
+    const recommendTx = await serviceProvider.recommend(args.user, 0n, 0n, [
+      0n,
+      0n,
+      0n,
+      0n,
+      0n,
+      0n,
+      0n,
+      0n,
+    ]);
+    console.log(`Recommend tx: ${recommendTx.hash}`);
+  });
 
 task("withdraw", "Withdraw funds from the contract")
   .addParam("amount", "The amount of tokens to withdraw")

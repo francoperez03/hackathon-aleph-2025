@@ -2,14 +2,14 @@
 pragma solidity ^0.8.13;
 
 interface IServiceProviderEvents {
-    event ServiceRequest(
-        address indexed user,
+    event NewServiceRequest(
+        uint256 requestId,
         uint256 serviceId,
         string encryptionKey,
         uint256 timestamp
     );
     event ServiceFulfilled(
-        address indexed user,
+        uint256 requestId,
         string encryptedConnectionDetails,
         uint256 expiresAt
     );
@@ -24,7 +24,24 @@ interface IServiceProviderErrors {
     error InsufficientBalance();
 }
 
-interface IServiceProvider is IServiceProviderEvents, IServiceProviderErrors  {
+interface IServiceProviderStructs {
+    struct ServiceRequest {
+        uint256 id;
+        address user;
+        uint256 serviceId;
+        string encryptionKey;
+        string encryptedConnectionDetails;
+        uint256 timestamp;
+        bool fulfilled;
+        uint256 expiresAt;
+    }
+}
+
+interface IServiceProvider is
+    IServiceProviderEvents,
+    IServiceProviderErrors,
+    IServiceProviderStructs
+{
     /// @dev Recommend a user to allow them to request a service
     /// @param user The user to recommend
     /// @param root The root of the merkle tree
@@ -50,13 +67,23 @@ interface IServiceProvider is IServiceProviderEvents, IServiceProviderErrors  {
     ) external;
 
     /// @dev Fulfill orders
-    /// @param user The user who requested the service
+    /// @param requestId The requestId
     /// @param encryptedConnectionDetails The encrypted connection details for the service
     /// @param groupId The groupId of the order. Hash of the connection details
-    function fulfillOrder(
-        address user,
+    function fulfill(
+        uint256 requestId,
         bytes32 groupId,
         string calldata encryptedConnectionDetails
+    ) external;
+
+    /// @dev Fulfill orders
+    /// @param requestId The requestId
+    /// @param encryptedConnectionDetails The encrypted connection details for the service
+    /// @param groupId The groupId of the order. Hash of the connection details
+    function batchFulfill(
+        uint256[] memory requestId,
+        bytes32[] memory groupId,
+        string[] calldata encryptedConnectionDetails
     ) external;
 
     /// @dev Report groupId. Slash reputation of all users in group
@@ -73,4 +100,8 @@ interface IServiceProvider is IServiceProviderEvents, IServiceProviderErrors  {
 
     /// @dev Get balance of the contract
     function balance() external view returns (uint256);
+
+    function getServiceRequestForUser(
+        address user
+    ) external view returns (ServiceRequest memory);
 }

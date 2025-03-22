@@ -5,6 +5,7 @@
     "ActionId": "0x11B9c47237D3944BE7C6AA7b6e6e9F8ab5fc496F",
     "PaymentToken": "0x11B9c47237D3944BE7C6AA7b6e6e9F8ab5fc496F",
     "Price": "1000000",
-    "ExpirationTime": "1000000"
+    "ExpirationTime": "1000000",
+    "MinReputation": "1"
   }
 }
