@@ -107,7 +107,7 @@ export function Connection({ setActiveScreen }: ConnectionProps) {
       </div>
 
       {/* Status text */}
-      <motion.div className="text-center" animate={{ opacity: isActive ? 1 : 0.7 }}>
+      <motion.div className="text-center pt-10" animate={{ opacity: isActive ? 1 : 0.7 }}>
         <AnimatePresence mode="wait">
           {isActive ? (
             <motion.p
