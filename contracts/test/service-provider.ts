@@ -8,26 +8,22 @@ const nodeRSA = new NodeRSA();
 describe("ServiceProvider", function () {
   async function deploymentFixture() {
     const [provider, customer] = await hre.ethers.getSigners();
-    console.log("OK");
+
     const Token = await hre.ethers.getContractFactory("TestToken");
-    const token = await Token.connect(customer).deploy(1000000n);
-    token.mint(customer, 10000000000000000000000n);
+    const token = await Token.connect(customer).deploy(10000000000000000000000n);
     const tokenAddress = await token.getAddress();
 
-    console.log("OK");
     const ServiceProviderFactory = await hre.ethers.getContractFactory(
       "ServiceProvider"
     );
-    console.log("OK");
     const serviceProvider = await ServiceProviderFactory.deploy(
-      "0x5Cff4762B7a50553586D52F96c11Aa65e9281D5a",
+      hre.ethers.ZeroAddress,
       "0x000",
       "0x000",
       tokenAddress,
       1000000000000000000n,
       60 * 60 * 24 * 7 // 7 days in seconds
     );
-    console.log("OK NO");
     const serviceProviderAddress = await serviceProvider.getAddress();
 
     await token

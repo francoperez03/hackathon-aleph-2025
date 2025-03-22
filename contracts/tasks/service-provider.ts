@@ -2,13 +2,14 @@ import { task } from "hardhat/config";
 import { HardhatRuntimeEnvironment, TaskArguments } from "hardhat/types";
 import crypto from "crypto";
 import NodeRSA from "encrypt-rsa";
+import { generateGroupId } from "../lib/utils";
 
 const nodeRSA = new NodeRSA();
 
 const poolOfKeys = [
   {
-    ip: "IP_ADDRESS",
-    key: "1234567890",
+    ip: "3.91.104.137",
+    key: "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpZeGpsS0Z3dGltMWJhOXRvczByeDBO@3.91.104.137:35942/?outline=1",
     countryId: "1",
   },
 ];
@@ -50,32 +51,31 @@ task("connect", "Connect to the vpn")
       );
       console.log("request tx: ", request.hash);
 
-      //  wait for provider to fulfill request
+      // wait for provider to fulfill request
       console.log("waiting for request fulfill...");
-      const eventPromise: Promise<{
-        user: string;
-        expiresAt: bigint;
-        encryptedConnectionDetails: string;
-      }> = new Promise((resolve, reject) => {
-        serviceProvider.once(
-          serviceProvider.filters.ServiceFulfilled(userAddress),
-          (user, encryptedConnectionDetails, expiresAt) => {
-            if (expiresAt > Date.now() / 1000) {
-              resolve({ user, encryptedConnectionDetails, expiresAt });
-            }
-          }
+      while (true) {
+        const events = await serviceProvider.queryFilter(
+          serviceProvider.filters.ServiceFulfilled()
         );
 
-        setTimeout(() => reject(new Error("Event timeout")), 60000);
-      });
-      const { encryptedConnectionDetails } = await eventPromise;
+        for (const event of events) {
+          const [user, encryptedConnectionDetails, _expiration] = event.args;
+          if (user !== userAddress) {
+            continue;
+          }
 
-      // decrypt with private key
-      const decrypted = nodeRSA.decryptStringWithRsaPrivateKey({
-        text: encryptedConnectionDetails,
-        privateKey,
-      });
-      console.log("Your connection details:", decrypted);
+          // decrypt connection details
+          const decrypted = nodeRSA.decryptStringWithRsaPrivateKey({
+            text: encryptedConnectionDetails,
+            privateKey,
+          });
+          console.log("Your connection details:", decrypted);
+
+          return;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
     }
   );
 
@@ -91,50 +91,33 @@ task("fulfill", "List all service providers").setAction(
     );
 
     while (true) {
-      // listen for new orders and fulfill them right away
-      const filter = serviceProvider.filters.ServiceRequest();
-      console.log("OK");
-      const events = await serviceProvider.queryFilter(filter, 3537400);
+      const events = await serviceProvider.queryFilter(
+        serviceProvider.filters.ServiceRequest()
+      );
+
       for (const event of events) {
         const [user, serviceId, encryptionKey, timestamp] = event.args;
-        console.log("Service Request Received:", {
-          user,
-          serviceId,
-          encryptionKey,
-          timestamp,
-        });
+        console.log("Service request: ", event.args);
 
         const key = poolOfKeys.find(
-          (key) => key.countryId === serviceId.toString()
+          (k) => k.countryId === serviceId.toString()
         );
         if (!key) {
-          console.error("No matching key found for country ID:", serviceId);
+          console.log("No key found for service id: ", serviceId);
           continue;
         }
 
-        const groupId = generateGroupId(key.ip);
-        console.log("groupId", groupId);
         const encryptedConnectionDetails =
           await nodeRSA.encryptStringWithRsaPublicKey({
             text: key.key,
             publicKey: Buffer.from(encryptionKey, "base64").toString(),
           });
-        console.log(
-          "encryptedDetails",
-          encryptedConnectionDetails,
-          "0x" + groupId
+
+        await serviceProvider.fulfillOrder(
+          user,
+          generateGroupId(key.ip),
+          encryptedConnectionDetails
         );
-
-        // Call the fulfillOrder function
-        // const tx = await serviceProvider.fulfillOrder(
-        //   user,
-        //   groupId,
-        //   encryptedConnectionDetails
-        // );
-        // const receipt = await tx.wait();
-
-        // Wait for the transaction to be mined
-        // console.log(`Transaction successful with hash: ${receipt?.hash}`);
       }
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -157,8 +140,4 @@ task("balance", "Get the balance of the contract").setAction(
 async function readContractAddressFromIgnition(chainId: bigint, id: string) {
   const deployed_addresses = require(`../ignition/deployments/chain-${chainId}/deployed_addresses.json`);
   return deployed_addresses[id];
-}
-
-function generateGroupId(key: string) {
-  return crypto.createHash("sha256").update(key).digest("hex");
 }
