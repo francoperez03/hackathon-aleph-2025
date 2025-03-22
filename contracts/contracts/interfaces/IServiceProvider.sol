@@ -52,12 +52,10 @@ interface IServiceProvider is IServiceProviderEvents, IServiceProviderErrors  {
     /// @dev Fulfill orders
     /// @param user The user who requested the service
     /// @param encryptedConnectionDetails The encrypted connection details for the service
-    /// @param expiresAt The timestamp at which the service expires
     /// @param groupId The groupId of the order. Hash of the connection details
     function fulfillOrder(
         address user,
         bytes32 groupId,
-        uint256 expiresAt,
         bytes calldata encryptedConnectionDetails
     ) external;
 

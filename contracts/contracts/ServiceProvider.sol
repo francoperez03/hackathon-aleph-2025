@@ -10,6 +10,7 @@ contract ServiceProvider is Reputation, IServiceProvider {
     uint256 public price;
     address public provider;
     IERC20 public paymentToken;
+    uint256 public expirationTime;
 
     /// @dev Mapping from user address to order
     mapping(address => bytes32) public userToGroupId;
@@ -27,11 +28,13 @@ contract ServiceProvider is Reputation, IServiceProvider {
         string memory _appId,
         string memory _actionId,
         IERC20 _token,
-        uint256 _price
+        uint256 _price,
+        uint256 _expirationTime
     ) Reputation(_worldId, _appId, _actionId) {
         paymentToken = _token;
         provider = msg.sender;
         price = _price;
+        expirationTime = _expirationTime;
     }
 
     /// @inheritdoc IServiceProvider
@@ -83,16 +86,14 @@ contract ServiceProvider is Reputation, IServiceProvider {
     function fulfillOrder(
         address user,
         bytes32 groupId,
-        uint256 expiresAt,
         bytes calldata encryptedConnectionDetails
     ) external onlyProvider {
-        // add to list of users for groupId
         if (userToGroupId[user] != groupId) {
             groupIdToUsers[groupId].push(user);
             userToGroupId[user] = groupId;
         }
 
-        emit ServiceFulfilled(user, encryptedConnectionDetails, expiresAt);
+        emit ServiceFulfilled(user, encryptedConnectionDetails, block.timestamp + expirationTime);
     }
 
     /// @inheritdoc IServiceProvider

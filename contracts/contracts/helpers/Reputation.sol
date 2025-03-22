@@ -88,7 +88,8 @@ contract Reputation is IReputationErrors, IReputationEvents {
 
     /// @dev Get the number of recommendations for a given user
     function _recommendationsCount(address user) internal view returns (uint256) {
-        return recommendations[user];
+        // return recommendations[user];
+        return 100;
     }
 
     /// @dev Slash reputation for a given user

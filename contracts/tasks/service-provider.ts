@@ -2,20 +2,26 @@ import { task } from "hardhat/config";
 import { HardhatRuntimeEnvironment, TaskArguments } from "hardhat/types";
 import crypto from "crypto";
 
-const poolOfKeys = [""];
+const poolOfKeys = [
+  {
+    ip: "IP_ADDRESS",
+    key: "1234567890",
+    countryId: "1",
+  },
+];
 
 task("connect", "Connect to the vpn")
   .addParam("countryId", "The country id")
   .setAction(
     async (taskArguments: TaskArguments, hre: HardhatRuntimeEnvironment) => {
       const { chainId } = await hre.ethers.provider.getNetwork();
-      const serviceProviderAddress = await readContractAddressFromIgnition(
-        chainId,
-        "ServiceProvider"
-      );
       const serviceProvider = await hre.ethers.getContractAt(
         "ServiceProvider",
-        serviceProviderAddress
+        await readContractAddressFromIgnition(chainId, "ServiceProvider#ServiceProvider")
+      );
+      const paymentToken = await hre.ethers.getContractAt(
+        "TestToken",
+        await readContractAddressFromIgnition(chainId, "TestToken#TestToken")
       );
 
       // create keypair
@@ -26,7 +32,13 @@ task("connect", "Connect to the vpn")
         privateKeyEncoding: { type: "pkcs8", format: "der" },
       });
 
+      // approve tokens
+      console.log("approving tokens...")
+      const approve = await paymentToken.approve(await serviceProvider.getAddress(), hre.ethers.MaxUint256);
+      await approve.wait()
+
       // create requests
+      console.log("creating request...")
       const tx = await serviceProvider.requestService(
         taskArguments.countryId,
         publicKey.toString("hex")
@@ -34,6 +46,7 @@ task("connect", "Connect to the vpn")
       await tx.wait();
 
       //  wait for provider to fulfill request
+      console.log("waiting for request fulfill...")
       const eventPromise: Promise<{
         user: string;
         expiresAt: bigint;
@@ -88,16 +101,29 @@ task("fulfill", "List all service providers").setAction(
           timestamp,
         });
 
-        const groupId = generateGroupId(poolOfKeys[0]);
-        const encryptedConnectionDetails = encryptionKey; // You may need to encode it properly if required
+        const key = poolOfKeys.find(
+          (key) => key.countryId === serviceId.toString()
+        );
+        if (!key) {
+          console.error("No matching key found for country ID:", serviceId);
+          return;
+        }
 
-        // Example private key for testing (use a signer from Hardhat for actual deployment)
-        const providerSigner = await hre.ethers.provider.getSigner();
+        const groupId = generateGroupId(key.ip);
+        const encryptedConnectionDetails = await crypto.publicEncrypt(
+          {
+            key: encryptionKey,
+            passphrase: "",
+          },
+          Buffer.from(key.key)
+        );
 
         // Call the fulfillOrder function
-        const tx = await serviceProvider
-          .connect(providerSigner)
-          .fulfillOrder(user, groupId, Date.now() + 24 * 3600 / 1000, encryptedConnectionDetails);
+        const tx = await serviceProvider.fulfillOrder(
+          user,
+          groupId,
+          encryptedConnectionDetails
+        );
 
         // Wait for the transaction to be mined
         const receipt = await tx.wait();
@@ -107,9 +133,14 @@ task("fulfill", "List all service providers").setAction(
   }
 );
 
-task("report", "List all service providers").setAction(async (_, hre) => {});
+task("report", "Report a corrupted group")
+  .setAction(async (_, hre) => {});
 
-task("recommend", "List all service providers").setAction(async (_, hre) => {});
+task("recommend", "Recommend a user").setAction(async (_, hre) => {});
+
+task("withdraw", "Withdraw funds from the contract").setAction(async (_, hre) => {});
+
+task("balance", "Get the balance of the contract").setAction(async (_, hre) => {});
 
 async function readContractAddressFromIgnition(chainId: bigint, id: string) {
   const deployed_addresses = require(`../ignition/deployments/chain-${chainId}/deployed_addresses.json`);

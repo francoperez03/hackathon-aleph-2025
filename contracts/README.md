@@ -7,7 +7,8 @@ Try running some of the following tasks:
 ```shell
 npx hardhat help
 npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.ts
+
+
+npx hardhat mint --network holesky --to 0x5Cff4762B7a50553586D52F96c11Aa65e9281D5a --amount 100
 ```
+
