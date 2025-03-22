@@ -1,6 +1,8 @@
-export type VpnStatus = "active" | "expired" | "missing-recommendations";
+export type VpnStatus = "active" | "expired" | "missing-recommendations" | "checking";
+export type PaymentStatus = "idle" | "loading" | "success" | "error";
+
 export const RPC_PROVIDER = "https://worldchain-mainnet.g.alchemy.com/public"
-export const CONTRACT_ADDRESS = "0xYourContractAddress";
+export const CONTRACT_ADDRESS = "0xeaf070617f52EC79Aad178DeECa7860658dd7506";
 
 export const CONTRACT_ABI = [
   {

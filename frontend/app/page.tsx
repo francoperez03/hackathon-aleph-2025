@@ -6,10 +6,10 @@ import { PayBlock } from "@/components/Pay";
 import { WalletAuth } from "@/components/WalletAuth";
 import { Login } from "@/components/Login";
 import { AnimatePresence } from "framer-motion";
-import { Connection } from "@/components/connection-screen";
 import { Recommend } from "@/components/recommend-screen";
 import { Navigation } from "@/components/navigation";
 import { Home } from "@/components/home-screen"
+import { Connection } from "@/components/connection/connection";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
