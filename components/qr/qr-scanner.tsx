@@ -24,18 +24,21 @@ interface IHtml5QrCodePlugin {
   verbose: boolean;
   aspectRatio?: number;
 }
-const Html5QrcodePlugin = (props: IHtml5QrCodePlugin) => {
+const QRCodeScanner = (props: IHtml5QrCodePlugin) => {
   useEffect(() => {
-    // when component mounts
     const config = createConfig(props);
-    
+
     const html5QrcodeScanner = new Html5QrcodeScanner(
       qrcodeRegionId,
       config,
       props.verbose
     );
 
-    html5QrcodeScanner.render(props.qrCodeSuccessCallback, undefined);
+    const scanCallback: QrcodeSuccessCallback = (decodedText, result) => {
+      html5QrcodeScanner.pause();
+      props.qrCodeSuccessCallback(decodedText, result);
+    };
+    html5QrcodeScanner.render(scanCallback, undefined);
 
     // cleanup function when component will unmount
     return () => {
@@ -48,4 +51,4 @@ const Html5QrcodePlugin = (props: IHtml5QrCodePlugin) => {
   return <div id={qrcodeRegionId} />;
 };
 
-export default Html5QrcodePlugin;
+export default QRCodeScanner;

@@ -11,6 +11,8 @@ import {
   Link,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import QRCodeGenerator from "./qr/qr-generate";
+import { MiniKit } from "@worldcoin/minikit-js";
 
 type VpnStatus = "active" | "expired" | "missing-recommendations" | "checking";
 type PaymentStatus = "idle" | "loading" | "success" | "error";
@@ -207,6 +209,8 @@ export function Connection({ setActiveScreen }: ConnectionProps) {
             <p className="text-sm text-[#666] mt-1">
               You need more recommendations to access the VPN.
             </p>
+            <div>Get recommended!</div>
+            <QRCodeGenerator text={MiniKit.user?.walletAddress ?? "0x"} />
           </motion.div>
         )}
       </div>
