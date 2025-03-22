@@ -267,11 +267,11 @@ const WorldTokenABI: Abi = [
 
 const userWalletAddress = MiniKit.user?.walletAddress;
 
-export const executeTransaction = () => {
+export const executeTransaction = async () => {
     if (!MiniKit.isInstalled()) {
         return;
     }
-    const payload = MiniKit.commands.sendTransaction({
+    const payload = await MiniKit.commandsAsync.sendTransaction({
         transaction: [
             {
                 address: "0x2cfc85d8e48f8eab294be644d9e25c3030863003",

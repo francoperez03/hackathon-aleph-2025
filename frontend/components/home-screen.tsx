@@ -53,10 +53,10 @@ export function Home({ setActiveScreen }: HomeProps) {
         <UserPlus className="h-5 w-5" />
       </Button>
       <Button
-      onClick={() => {
-        const result = executeTransaction()
-        console.log("result: ", result);
-      }}>
+        onClick={() => {
+          executeTransaction().then((x) => console.log("result: ", x));
+        }}
+      >
         try send transaction
       </Button>
 
