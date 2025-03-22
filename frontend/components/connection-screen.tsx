@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import QRCodeGenerator from "./qr/qr-generate";
 import { MiniKit } from "@worldcoin/minikit-js";
+import { VpnService } from "@/services/vpnService";
 
 type VpnStatus = "active" | "expired" | "missing-recommendations" | "checking";
 type PaymentStatus = "idle" | "loading" | "success" | "error";
@@ -29,28 +30,36 @@ export function Connection({ setActiveScreen }: ConnectionProps) {
   const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
-    setTimeout(() => {
-      const random = Math.random();
-      let status: VpnStatus;
-
-      if (random < 0.33) {
-        status = "active";
-        const daysLeft = Math.floor(Math.random() * 30) + 1;
-        setRemainingDays(daysLeft);
-        const start = new Date();
-        const end = new Date();
-        end.setDate(start.getDate() + daysLeft);
-        setStartDate(start.toLocaleDateString());
-        setEndDate(end.toLocaleDateString());
-      } else if (random < 0.66) {
-        status = "expired";
-      } else {
-        status = "missing-recommendations";
+    const fetchVpnStatus = async () => {
+      if (!MiniKit.user?.walletAddress) return;
+  
+      const vpnService = new VpnService();
+      const serviceId = 1n; 
+  
+      try {
+        const status = await vpnService.getVpnStatus(MiniKit.user.walletAddress, serviceId);
+        setVpnStatus(status);
+  
+        if (status === "active") {
+          const remaining = await vpnService.getRemainingDays(MiniKit.user.walletAddress);
+          setRemainingDays(remaining);
+  
+          const start = new Date();
+          const end = new Date();
+          end.setDate(start.getDate() + remaining);
+          setStartDate(start.toLocaleDateString());
+          setEndDate(end.toLocaleDateString());
+        }
+      } catch (err) {
+        console.error("Error fetching VPN status:", err);
       }
-
-      setVpnStatus(status);
-    }, 2000);
+    };
+  
+    const timeout = setTimeout(fetchVpnStatus, 2000);
+  
+    return () => clearTimeout(timeout);
   }, []);
+  
 
   const handlePayment = () => {
     setPaymentStatus("loading");
