@@ -6,7 +6,7 @@ const ABI: Abi = {} as Abi
 
 const userWalletAddress = MiniKit.user?.walletAddress
 
-export const sendTransaction = (props: {}) => {
+export const executeTransaction = (props: {}) => {
     if (!MiniKit.isInstalled()) {
         return;
     }
