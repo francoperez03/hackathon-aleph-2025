@@ -7,6 +7,8 @@ import {IWorldID} from "../interfaces/IWorldID.sol";
 interface IReputationErrors {
     /// @notice Thrown when attempting to reuse a nullifier
     error DuplicateNullifier(uint256 nullifierHash);
+
+    error AlreadyRecommended();
 }
 
 interface IReputationEvents {
@@ -30,11 +32,11 @@ contract Reputation is IReputationErrors, IReputationEvents {
     /// @dev Whether a nullifier hash has been used already. Used to guarantee an action is only performed once by a single person
     mapping(uint256 => bool) public nullifierHashes;
 
-    /// @dev recommendations mapping
+    /// @dev recommendations count
     mapping(address => uint256) public recommendations;
 
-    /// @dev Given recommendations
-    mapping(address => uint256) public givenRecommendationsCount;
+    /// @dev to check if we have already recommended
+    mapping(address => mapping(address => bool)) public recommended;
 
     /// @param _worldId The WorldID router that will verify the proofs
     /// @param _appId The World ID app ID
@@ -61,30 +63,33 @@ contract Reputation is IReputationErrors, IReputationEvents {
         uint256 nullifierHash,
         uint256[8] calldata proof
     ) internal {
-        // First, we make sure this person hasn't done this before
-        if (nullifierHashes[nullifierHash]) {
-            revert DuplicateNullifier(nullifierHash);
+        // TODO: currently mocked as per worldid app issue
+        // // First, we make sure this person hasn't done this before
+        // if (nullifierHashes[nullifierHash]) {
+        //     revert DuplicateNullifier(nullifierHash);
+        // }
+
+        // // We now verify the provided proof is valid and the user is verified by World ID
+        // worldId.verifyProof(
+        //     root,
+        //     groupId,
+        //     abi.encodePacked(recommendedUser).hashToField(),
+        //     nullifierHash,
+        //     externalNullifier,
+        //     proof
+        // );
+
+        // // We now record the user has done this, so they can't do it again (proof of uniqueness)
+        // nullifierHashes[nullifierHash] = true;
+
+        if (recommended[msg.sender][recommendedUser]) {
+            revert AlreadyRecommended();
         }
-
-        // We now verify the provided proof is valid and the user is verified by World ID
-        worldId.verifyProof(
-            root,
-            groupId,
-            abi.encodePacked(recommendedUser).hashToField(),
-            nullifierHash,
-            externalNullifier,
-            proof
-        );
-
-        // We now record the user has done this, so they can't do it again (proof of uniqueness)
-        nullifierHashes[nullifierHash] = true;
-
-        // TODO: check if wallet already recommended person
 
         // increment recommendation count
         recommendations[recommendedUser]++;
-        givenRecommendationsCount[msg.sender]++;
-
+        recommended[msg.sender][recommendedUser] = true;
+        
         emit Verified(nullifierHash);
     }
 
@@ -92,12 +97,11 @@ contract Reputation is IReputationErrors, IReputationEvents {
     function _recommendationsCount(
         address user
     ) internal view returns (uint256) {
-        // return recommendations[user];
-        return 100;
+        return recommendations[user];
     }
 
     /// @dev Slash reputation for a given user
     function _slashReputation(address user) internal {
-        recommendations[user] = 0;
+        recommendations[user] -= 1;
     }
 }
