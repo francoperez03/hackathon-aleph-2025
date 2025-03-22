@@ -3,8 +3,9 @@
     "WorldId": "0x11B9c47237D3944BE7C6AA7b6e6e9F8ab5fc496F",
     "AppId": "0x11B9c47237D3944BE7C6AA7b6e6e9F8ab5fc496F",
     "ActionId": "0x11B9c47237D3944BE7C6AA7b6e6e9F8ab5fc496F",
-    "PaymentToken": "0x11B9c47237D3944BE7C6AA7b6e6e9F8ab5fc496F",
+    "PaymentToken": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
     "Price": "1000000",
-    "ExpirationTime": "1000000"
+    "ExpirationTime": "1000000",
+    "MinReputation": "1"
   }
 }

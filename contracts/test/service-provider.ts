@@ -79,12 +79,15 @@ describe("ServiceProvider", function () {
       })
     );
 
-    // provider fulfills
+    assert((await serviceProvider.getUnfulfilledRequests()).length === 1);
+
     await serviceProvider.batchFulfill(
       response.map((r) => r.id),
       response.map((r) => r.groupId),
       response.map((r) => r.encryptedConnectionDetails)
     );
+
+    assert((await serviceProvider.getUnfulfilledRequests()).length === 0);
 
     // customer get events
     const serviceRequest = await serviceProvider.getServiceRequestForUser(

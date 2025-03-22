@@ -5,7 +5,7 @@ import { generateGroupId } from "../lib/utils";
 
 const nodeRSA = new NodeRSA();
 
-const poolOfKeys = [
+const KEYS_POOL = [
   {
     ip: "3.91.104.137",
     key: "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpZeGpsS0Z3dGltMWJhOXRvczByeDBO@3.91.104.137:35942/?outline=1",
@@ -16,37 +16,26 @@ const poolOfKeys = [
 task("approve", "Approve a tokens for the service provider")
   .addParam("amount", "The amount of tokens to approve")
   .setAction(async (args: TaskArguments, hre: HardhatRuntimeEnvironment) => {
-    const { chainId } = await hre.ethers.provider.getNetwork();
     const paymentToken = await hre.ethers.getContractAt(
       "TestToken",
-      await readContractAddressFromIgnition(
-        chainId,
-        "TestToken#TestToken"
-      )
+      await CONTRACT_ADDRESSES(hre, "TestToken")
     );
 
     console.log("approving tokens...");
     const approve = await paymentToken.approve(
-      await readContractAddressFromIgnition(
-        chainId,
-        "ServiceProvider#ServiceProvider"
-      ),
+      await CONTRACT_ADDRESSES(hre, "ServiceProvider"),
       hre.ethers.MaxUint256
     );
     console.log("approve tx: ", approve.hash);
-  })
+  });
 
 task("connect", "Connect to the vpn")
   .addParam("countryId", "The country id")
   .setAction(
     async (taskArguments: TaskArguments, hre: HardhatRuntimeEnvironment) => {
-      const { chainId } = await hre.ethers.provider.getNetwork();
       const serviceProvider = await hre.ethers.getContractAt(
         "ServiceProvider",
-        await readContractAddressFromIgnition(
-          chainId,
-          "ServiceProvider#ServiceProvider"
-        )
+        await CONTRACT_ADDRESSES(hre, "ServiceProvider")
       );
 
       // create requests
@@ -57,6 +46,7 @@ task("connect", "Connect to the vpn")
         1,
         Buffer.from(publicKey).toString("base64")
       );
+      await request.wait();
       console.log("request tx: ", request.hash);
 
       // wait for provider to fulfill request
@@ -90,10 +80,7 @@ task("fulfill", "List all service providers").setAction(
     const { chainId } = await hre.ethers.provider.getNetwork();
     const serviceProvider = await hre.ethers.getContractAt(
       "ServiceProvider",
-      await readContractAddressFromIgnition(
-        chainId,
-        "ServiceProvider#ServiceProvider"
-      )
+      await CONTRACT_ADDRESSES(hre, "ServiceProvider")
     );
 
     do {
@@ -107,34 +94,37 @@ task("fulfill", "List all service providers").setAction(
 
       console.log("Found pending requests:", requests.length);
 
-      const response = (await Promise.allSettled(
-        requests.map(async (r) => {
-          const keys = poolOfKeys.filter(
-            (k) => k.countryId === r.serviceId.toString()
-          );
-          const key = keys[Math.floor(Math.random() * keys.length)];
+      const response = (
+        await Promise.allSettled(
+          requests.map(async (r) => {
+            const keys = KEYS_POOL.filter(
+              (k) => k.countryId === r.serviceId.toString()
+            );
+            const key = keys[Math.floor(Math.random() * keys.length)];
 
-          return {
-            id: r.id,
-            groupId: generateGroupId(key.ip),
-            encryptedConnectionDetails:
-              await nodeRSA.encryptStringWithRsaPublicKey({
-                text: key.key,
-                publicKey: Buffer.from(r.encryptionKey, "base64").toString(),
-              }),
-          };
-        })
-      )).filter((r) => r.status === "fulfilled").map((r) => r.value);
+            return {
+              id: r.id,
+              groupId: generateGroupId(key.ip),
+              encryptedConnectionDetails:
+                await nodeRSA.encryptStringWithRsaPublicKey({
+                  text: key.key,
+                  publicKey: Buffer.from(r.encryptionKey, "base64").toString(),
+                }),
+            };
+          })
+        )
+      )
+        .filter((r) => r.status === "fulfilled")
+        .map((r) => r.value);
 
       // provider fulfills
-     const batch =  await serviceProvider.batchFulfill(
+      const batch = await serviceProvider.batchFulfill(
         response.map((r) => r.id),
         response.map((r) => r.groupId),
         response.map((r) => r.encryptedConnectionDetails)
       );
       await batch.wait();
       console.log("Batch fulfill tx: ", batch.hash);
-
     } while (true);
   }
 );
@@ -145,10 +135,7 @@ task("report", "Report a corrupted group")
     const { chainId } = await hre.ethers.provider.getNetwork();
     const serviceProvider = await hre.ethers.getContractAt(
       "ServiceProvider",
-      await readContractAddressFromIgnition(
-        chainId,
-        "ServiceProvider#ServiceProvider"
-      )
+      await CONTRACT_ADDRESSES(hre, "ServiceProvider")
     );
 
     const reportTx = await serviceProvider.reportGroupId(
@@ -188,10 +175,7 @@ task("withdraw", "Withdraw funds from the contract")
     const { chainId } = await hre.ethers.provider.getNetwork();
     const serviceProvider = await hre.ethers.getContractAt(
       "ServiceProvider",
-      await readContractAddressFromIgnition(
-        chainId,
-        "ServiceProvider#ServiceProvider"
-      )
+      await CONTRACT_ADDRESSES(hre, "ServiceProvider")
     );
 
     const withdrawTx = await serviceProvider.withdraw(args.amount);
@@ -202,10 +186,7 @@ task("balance", "Get the balance of the contract").setAction(async (_, hre) => {
   const { chainId } = await hre.ethers.provider.getNetwork();
   const serviceProvider = await hre.ethers.getContractAt(
     "ServiceProvider",
-    await readContractAddressFromIgnition(
-      chainId,
-      "ServiceProvider#ServiceProvider"
-    )
+    await CONTRACT_ADDRESSES(hre, "ServiceProvider")
   );
 
   const balance = await serviceProvider.balance();
@@ -215,4 +196,14 @@ task("balance", "Get the balance of the contract").setAction(async (_, hre) => {
 async function readContractAddressFromIgnition(chainId: bigint, id: string) {
   const deployed_addresses = require(`../ignition/deployments/chain-${chainId}/deployed_addresses.json`);
   return deployed_addresses[id];
+}
+
+async function CONTRACT_ADDRESSES(
+  hre: HardhatRuntimeEnvironment,
+  contract: "ServiceProvider" | "TestToken"
+): Promise<`0x${string}`> {
+  const { chainId } = await hre.ethers.provider.getNetwork();
+  const deployed_addresses = require(`../ignition/deployments/chain-${chainId}/deployed_addresses.json`);
+
+  return deployed_addresses[`${contract}#${contract}`];
 }
