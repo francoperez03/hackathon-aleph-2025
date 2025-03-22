@@ -6,8 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, User, Check, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QRScannerModal } from "./qr/qr-scanner-modal";
-import QRCodeGenerator from "./qr/qr-generate";
-import { MiniKit } from "@worldcoin/minikit-js";
 import { recommend } from "@/app/contracts/service-provider/service-provider";
 
 interface RecommendProps {
