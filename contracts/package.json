@@ -1,6 +1,7 @@
 {
   "name": "hardhat-project",
   "scripts": {
+    "compile": "hardhat compile",
     "test": "hardhat test",
     "deploy-service-provider:hardhat": "hardhat ignition deploy ignition/modules/ServiceProvider.ts --network hardhat --parameters ignition/parameters/hardhat.json",
     "deploy-test-token:hardhat": "hardhat ignition deploy ignition/modules/TestToken.ts --network hardhat",

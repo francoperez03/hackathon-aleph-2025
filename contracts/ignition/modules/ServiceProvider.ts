@@ -7,8 +7,9 @@ const ServiceProvider = buildModule("ServiceProvider", (m) => {
   const token = m.getParameter("PaymentToken");
   const price = m.getParameter("Price");
   const expirationTime = m.getParameter("ExpirationTime");
+  const minReputation = m.getParameter("MinReputation")
 
-  const serviceProvider = m.contract("ServiceProvider", [worldId, appId, actionId, token, price, expirationTime]);
+  const serviceProvider = m.contract("ServiceProvider", [worldId, appId, actionId, token, price, expirationTime, minReputation]);
 
   return { serviceProvider };
 });
