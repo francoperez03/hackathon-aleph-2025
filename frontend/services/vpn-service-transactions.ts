@@ -31,7 +31,7 @@ export const recommend = async (props: {
   return payload;
 };
 
-export const requestService = async function (props: { countryId: string }) {
+export const requestService = async function (props: { countryId: number }) {
   if (!MiniKit.isInstalled()) {
     return;
   }

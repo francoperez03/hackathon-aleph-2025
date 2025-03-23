@@ -11,7 +11,7 @@ export default function VpnExpired() {
   const router = useRouter();
 
   const onBuyClick = useCallback(() => {
-    requestService({ countryId: "1" });
+    requestService({ countryId: 1 });
   }, []);
 
   return (
@@ -25,7 +25,9 @@ export default function VpnExpired() {
       <ConnectionHeader onBack={() => router.push("/")} />
       <div className="w-full max-w-xs flex flex-col items-center text-center mb-6">
         <h1 className="text-xl font-bold text-[#333]">Acquire VPN access</h1>
-        <p className="mt-1 text-xs text-[#666]">Your access expired. Buy now and wait a few seconds to get access.</p>
+        <p className="mt-1 text-xs text-[#666]">
+          Your access expired. Buy now and wait a few seconds to get access.
+        </p>
       </div>
 
       <Button onClick={onBuyClick} variant="default" className="mt-4">
