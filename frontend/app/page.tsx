@@ -85,7 +85,7 @@ export default function App() {
           </p>
         </motion.div>
 
-        <div className="flex space-x-2 mt-60">
+        <div className="flex space-x-2 mt-50">
           {features.map((_, i) => (
             <motion.div
               key={i}
