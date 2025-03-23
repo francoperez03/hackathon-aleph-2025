@@ -23,9 +23,10 @@ export class VpnService {
   async getVpnStatus(userAddress: string, serviceId: bigint): Promise<VpnStatus> {
     try {
       const recommendationCount = await this.contract.recommendationsCount(userAddress);
-      if(recommendationCount === 0n) {
+      alert(`recomendationCount ${recommendationCount}`);
+      if (recommendationCount === 0n) {
         return "missing-recommendations";
-      } else if(recommendationCount >= 1n) {
+      } else if (recommendationCount >= 1n) {
         const rawRequest = await this.contract.getServiceRequestForUser(userAddress);
         const [
           id,
@@ -37,10 +38,10 @@ export class VpnService {
           fulfilled,
           expiresAt
         ] = rawRequest;
-        
+
         const serviceRequest: ServiceRequest = {
-          id, 
-          user, 
+          id,
+          user,
           serviceId: requestServiceId,
           encryptionKey,
           encryptedConnectionDetails,
