@@ -33,8 +33,6 @@ export function Connection({ setActiveScreen }: ConnectionProps) {
       const vpnService = new VpnService();
       const serviceId = 1n;
 
-      console.log({'kdjhasjdhas':'kjhdasjhda'})
-
       try {
         const status = await vpnService.getVpnStatus(address, serviceId);
         console.log({status})

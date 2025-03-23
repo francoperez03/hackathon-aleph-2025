@@ -21,7 +21,7 @@ export default function VpnMissingRecs({ address }: Props) {
       </div>
       <h3 className="text-lg font-bold text-[#333]">More Recommendations Needed</h3>
       <p className="text-sm text-[#666] mt-1">
-        You need more recommendations to access the VPN.
+        You need at least 1 recommendation to access the VPN.
       </p>
       <div>Get recommended!</div>
       <QRCodeGenerator text={address ?? "0x"} />
