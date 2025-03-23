@@ -38,7 +38,7 @@ export default function App() {
 
   return (
     <motion.div
-      className="relative flex h-full w-full flex-col items-center px-6 pt-12 pb-28"
+      className="relative flex h-screen w-full flex-col items-center px-6 pt-12"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
