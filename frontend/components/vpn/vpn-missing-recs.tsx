@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Clock } from "lucide-react";
-import {QRCodeGenerator} from "@/components/qr/qr-generate";
+import { QRCodeGenerator } from "@/components/qr/qr-generate";
 
 interface Props {
   address: string;

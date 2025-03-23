@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useCallback, useState } from "react";
-import { ArrowLeft, CopyIcon, ScanQrCodeIcon } from "lucide-react";
+import { CopyIcon, ScanQrCodeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 import { QRCodeGenerator } from "@/components/qr/qr-generate";
@@ -15,12 +15,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { recommend } from "@/services/vpnServiceTransactions";
 
 export default function RecommendPage() {
   const router = useRouter();
-  const [address, setAddress] = useState("");
-  const [receiveRecommendation, setReceiveRecommendation] = useState(true);
   const [to, setTo] = useState("");
+  const [receiveRecommendation, setReceiveRecommendation] = useState(true);
   const [showScanner, setShowScanner] = useState(false);
 
   const onScan = useCallback(
@@ -114,8 +114,8 @@ export default function RecommendPage() {
                 <DialogHeader>
                   <DialogTitle>Scan</DialogTitle>
                   <DialogDescription>
-                    Make changes to your profile here. Click save when you&apos;re
-                    done.
+                    Make changes to your profile here. Click save when
+                    you&apos;re done.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="mt-6 h-[400px]">
@@ -126,7 +126,13 @@ export default function RecommendPage() {
           </div>
 
           <div className="p-6 space-y-4">
-            <Button className="w-full" size="lg">
+            <Button
+              className="w-full"
+              size="lg"
+              onClick={() =>
+                recommend({ addressToRecommend: to as `0x${string}` })
+              }
+            >
               Recommend
             </Button>
 
@@ -134,7 +140,7 @@ export default function RecommendPage() {
               className="w-full"
               variant="outline"
               size="lg"
-              onClick={() => setReceiveRecommendation(false)}
+              onClick={() => setReceiveRecommendation(true)}
             >
               Back
             </Button>
