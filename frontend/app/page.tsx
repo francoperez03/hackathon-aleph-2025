@@ -108,6 +108,7 @@ export default function App() {
           {MiniKit.user && (
             <Button
               // className="w-full bg-primary py-6 text-lg text-white hover:bg-[#0077b3] shadow-lg transition-transform active:scale-95"
+              className="w-full"
               onClick={() => router.push("/connection")}
             >
               {!MiniKit.user ? "Login" : "Connect Now"}
