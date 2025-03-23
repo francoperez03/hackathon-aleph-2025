@@ -28,10 +28,10 @@ export function Navigation({ activeScreen, setActiveScreen }: NavigationProps) {
               className="relative flex flex-1 flex-col items-center justify-center py-2"
               onClick={() => item.id !== "settings" && setActiveScreen(item.id as any)}
             >
-              <Icon className={`h-5 w-5 ${isActive ? "text-[#0088cc]" : "text-[#999]"}`} />
-              <span className={`mt-1 text-xs ${isActive ? "text-[#0088cc]" : "text-[#999]"}`}>{item.label}</span>
+              <Icon className={`h-5 w-5 ${isActive ? "text-primary" : "text-[#999]"}`} />
+              <span className={`mt-1 text-xs ${isActive ? "text-primary" : "text-[#999]"}`}>{item.label}</span>
               {isActive && (
-                <div className="absolute -bottom-1 left-1/2 h-1 w-5 -translate-x-1/2 rounded-t-full bg-[#0088cc]" />
+                <div className="absolute -bottom-1 left-1/2 h-1 w-5 -translate-x-1/2 rounded-t-full bg-primary" />
               )}
             </button>
           )

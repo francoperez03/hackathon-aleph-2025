@@ -47,7 +47,7 @@ export default function VpnActive({ remainingDays, startDate, endDate, paymentSt
         </p>
       </div>
       <Button
-        className="mt-4 bg-[#0088cc] text-white hover:bg-[#0077b3] flex items-center justify-center min-w-[220px] h-[50px] text-lg font-normal rounded-lg"
+        className="mt-4 bg-primary text-white hover:bg-[#0077b3] flex items-center justify-center min-w-[220px] h-[50px] text-lg font-normal rounded-lg"
         onClick={() => window.open("https://www.google.com", "_blank")}
       >
         <Link className="h-5 w-5 mr-2" />

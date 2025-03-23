@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Sora } from "next/font/google";
 import "./globals.css";
 import MiniKitProvider from "@/components/minikit-provider";
-import dynamic from "next/dynamic";
-import NextAuthProvider from "@/components/next-auth-provider";
 import "@worldcoin/mini-apps-ui-kit-react/styles.css";
 
 const sora = Sora({ subsets: ["latin"] });
@@ -33,9 +31,7 @@ export default function RootLayout({
         />
       </head>
       <body className={sora.className}>
-        <NextAuthProvider>
-          <MiniKitProvider>{children}</MiniKitProvider>
-        </NextAuthProvider>
+        <MiniKitProvider>{children}</MiniKitProvider>
       </body>
     </html>
   );
