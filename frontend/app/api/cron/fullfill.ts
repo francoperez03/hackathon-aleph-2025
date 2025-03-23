@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
 import NodeRSA from "encrypt-rsa";
 import { NextResponse } from "next/server";
-import { CONTRACT_ABI } from "@/types";
 import crypto from "crypto";
+import { SERVICE_PROVIDER_ABI } from "@/constants/service-provider";
 
 const nodeRSA = new NodeRSA();
 const SERVICE_PROVIDER_ADDRESS = "0xeaf070617f52EC79Aad178DeECa7860658dd7506";
@@ -11,7 +11,7 @@ const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 const signer = new ethers.Wallet(PRIVATE_KEY!, provider);
 const serviceProvider = new ethers.Contract(
   SERVICE_PROVIDER_ADDRESS,
-  CONTRACT_ABI,
+  SERVICE_PROVIDER_ABI,
   provider
 );
 

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Button } from "../ui/button";
 import { useCallback } from "react";
-import { requestService } from "@/services/vpn-service-transactions";
+// import { requestService } from "@/lib/services/vpn-service-transactions";
 import ConnectionHeader from "../connection/connection-header";
 import { useRouter } from "next/navigation";
 
@@ -11,7 +11,7 @@ export default function VpnExpired() {
   const router = useRouter();
 
   const onBuyClick = useCallback(() => {
-    requestService({ countryId: 1 });
+    // requestService({ countryId: 1 });
   }, []);
 
   return (

@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { recommend } from "@/services/vpn-service-transactions";
+import { recommend } from "@/lib/services/vpn-service-transactions";
 import { MiniKit } from "@worldcoin/minikit-js";
 
 export default function RecommendPage() {
