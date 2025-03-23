@@ -21,11 +21,10 @@ export default function Connection() {
   );
   const [loading, setLoading] = useState(false);
   const [decrypted, setDecrypted] = useState("");
+  const [bought, setBought] = useState(false);
 
   const onBuy = useCallback(async () => {
     const user = MiniKit.user?.walletAddress;
-    console.log({ user });
-
     if (!user) {
       return;
     }
@@ -51,19 +50,21 @@ export default function Connection() {
         ],
       });
 
-      while (true) {
-        const serviceRequest = await vpnService.getServiceRequestForUser(user);
+      setBought(true);
 
-        if (
-          serviceRequest.fulfilled &&
-          serviceRequest.expiresAt > Date.now() / 1000
-        ) {
-          return setServiceRequest(serviceRequest);
-        }
+      // while (true) {
+      //   const serviceRequest = await vpnService.getServiceRequestForUser(user);
 
-        console.log("waiting for request fulfill...");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
+      //   if (
+      //     serviceRequest.fulfilled &&
+      //     serviceRequest.expiresAt > Date.now() / 1000
+      //   ) {
+      //     return setServiceRequest(serviceRequest);
+      //   }
+
+      //   console.log("waiting for request fulfill...");
+      //   await new Promise((resolve) => setTimeout(resolve, 1000));
+      // }
     } catch (e) {
       console.error(e);
       window.alert("Error: " + e);
@@ -120,6 +121,29 @@ export default function Connection() {
         console.log({ e });
       });
   }, [serviceRequest]);
+
+  if (loading) {
+    return (
+      <div className="text-center px-4 py-10 flex flex-col h-screen">
+        <div className="flex-1">
+          <h1 className="text-lg font-medium">Loading...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (bought) {
+    return (
+      <div className="text-center px-4 py-10 flex flex-col h-screen">
+        <div className="flex-1">
+          <h1 className="text-lg font-medium">Success!</h1>
+          <p className="text-muted-foreground text-sm mt-1 max-w-xs mx-auto">
+            Your connection details will be ready shortly
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

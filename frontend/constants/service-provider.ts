@@ -1,5 +1,5 @@
 export const SERVICE_PROVIDER_ADDRESS =
-  "0x8c6C533372c4C242509A895ded7dAc8916f650c6";
+  "0x5e875f3de1bf063BB267A3a6b3eBb13757c1bD51";
 
   
 export const RPC_PROVIDER = "https://worldchain-mainnet.g.alchemy.com/public"
