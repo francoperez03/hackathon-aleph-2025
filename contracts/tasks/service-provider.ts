@@ -95,6 +95,8 @@ task("fulfill", "List all service providers").setAction(
 
       console.log("Found pending requests:", requests.length);
 
+      console.log({ req: requests[0]})
+
       const response = (
         await Promise.allSettled(
           requests.map(async (r) => {
@@ -191,7 +193,7 @@ task("balance", "Get the balance of the contract").setAction(async (_, hre) => {
     await CONTRACT_ADDRESSES(hre, "ServiceProvider")
   );
 
-  const balance = await serviceProvider.balance();
+  const balance = await serviceProvider.getServiceRequestForUser("0xf6868Dff09cd83e0bdE34D720643c708b41d5bFB");
   console.log(`Balance: ${balance}`);
 });
 
