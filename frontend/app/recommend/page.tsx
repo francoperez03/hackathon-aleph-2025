@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { recommend } from "@/services/vpnServiceTransactions";
 
 export default function RecommendPage() {
   const router = useRouter();
@@ -113,8 +114,8 @@ export default function RecommendPage() {
                 <DialogHeader>
                   <DialogTitle>Scan</DialogTitle>
                   <DialogDescription>
-                    Make changes to your profile here. Click save when you&apos;re
-                    done.
+                    Make changes to your profile here. Click save when
+                    you&apos;re done.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="mt-6 h-[400px]">
@@ -125,7 +126,13 @@ export default function RecommendPage() {
           </div>
 
           <div className="p-6 space-y-4">
-            <Button className="w-full" size="lg">
+            <Button
+              className="w-full"
+              size="lg"
+              onClick={() =>
+                recommend({ addressToRecommend: to as `0x${string}` })
+              }
+            >
               Recommend
             </Button>
 
