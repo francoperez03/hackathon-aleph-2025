@@ -1,8 +1,9 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { Sora } from "next/font/google";
-import "./globals.css";
 import MiniKitProvider from "@/components/minikit-provider";
 import "@worldcoin/mini-apps-ui-kit-react/styles.css";
+import dynamic from "next/dynamic";
 
 const sora = Sora({ subsets: ["latin"] });
 
@@ -16,6 +17,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const ErudaProvider = dynamic(
+    () => import("../components/eruda").then((c) => c.ErudaProvider),
+    {
+      ssr: false,
+    }
+  );
+
   return (
     <html lang="en">
       <head>
@@ -31,7 +39,9 @@ export default function RootLayout({
         />
       </head>
       <body className={sora.className}>
-        <MiniKitProvider>{children}</MiniKitProvider>
+        <ErudaProvider>
+          <MiniKitProvider>{children}</MiniKitProvider>
+        </ErudaProvider>
       </body>
     </html>
   );
