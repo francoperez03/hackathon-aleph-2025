@@ -2,17 +2,15 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { MiniKit } from "@worldcoin/minikit-js";
-import { ServiceRequest, vpnService, VpnService } from "@/services/vpn-service";
+import { ServiceRequest, vpnService } from "@/services/vpn-service";
 import { useRouter } from "next/navigation";
-import NodeRSA from "encrypt-rsa";
 import {
   SERVICE_PROVIDER_ABI,
   SERVICE_PROVIDER_ADDRESS,
 } from "@/constants/service-provider";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-const nodeRSA = new NodeRSA();
+import sodium from "libsodium-wrappers";
 
 export default function Connection() {
   const router = useRouter();
@@ -21,6 +19,7 @@ export default function Connection() {
     null
   );
   const [loading, setLoading] = useState(false);
+  const [decrypted, setDecrypted] = useState("");
 
   const onBuy = useCallback(async () => {
     const user = MiniKit.user?.walletAddress;
@@ -33,8 +32,14 @@ export default function Connection() {
     setLoading(true);
 
     try {
-      const { publicKey, privateKey } = nodeRSA.createPrivateAndPublicKeys();
-      console.log({ publicKey, privateKey });
+      await sodium.ready;
+      const keypair = await sodium.crypto_box_keypair();
+      const privateKey = "0x" + sodium.to_hex(keypair.privateKey);
+      const publicKey = "0x" + sodium.to_hex(keypair.publicKey);
+      console.log({
+        publicKey,
+        privateKey,
+      });
       localStorage.setItem("publicKey", publicKey);
       localStorage.setItem("privateKey", privateKey);
 
@@ -44,7 +49,7 @@ export default function Connection() {
             address: SERVICE_PROVIDER_ADDRESS,
             abi: SERVICE_PROVIDER_ABI,
             functionName: "requestService",
-            args: ["1", Buffer.from(publicKey).toString("base64")],
+            args: ["1", publicKey],
           },
         ],
       });
@@ -98,6 +103,22 @@ export default function Connection() {
     });
   }, []);
 
+  useEffect(() => {
+    sodium.ready.then(() => {
+      if (!serviceRequest) {
+        return;
+      }
+
+      const decrypted = sodium.crypto_box_seal_open(
+        serviceRequest.encryptedConnectionDetails,
+        sodium.from_hex(localStorage.getItem("publicKey") || ""),
+        sodium.from_hex(localStorage.getItem("privateKey") || "")
+      );
+      setDecrypted(sodium.to_string(decrypted));
+    })
+
+  }, [serviceRequest]);
+
   if (loading) {
     return (
       <div className="text-center px-4 py-10 flex flex-col h-screen">
@@ -140,10 +161,10 @@ export default function Connection() {
     serviceRequest?.fulfilled &&
     serviceRequest.expiresAt > Date.now() / 1000
   ) {
-    const decrypted = nodeRSA.decryptStringWithRsaPrivateKey({
-      text: serviceRequest.encryptedConnectionDetails,
-      privateKey: localStorage.getItem("privateKey") as string,
-    });
+    // const decrypted = nodeRSA.decryptStringWithRsaPrivateKey({
+    //   text: serviceRequest.encryptedConnectionDetails,
+    //   privateKey: localStorage.getItem("privateKey") as string,
+    // });
 
     return (
       <div className="text-center px-4 py-10 flex flex-col h-screen">

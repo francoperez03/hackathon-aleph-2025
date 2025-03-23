@@ -10,6 +10,7 @@
     "wipe-service-provider:holesky": "hardhat ignition wipe chain-17000 ServiceProvider#ServiceProvider",
     "deploy-test-token:holesky": "hardhat ignition deploy ignition/modules/TestToken.ts --network holesky",
     "deploy-service-provider:worldchain": "hardhat ignition deploy ignition/modules/ServiceProvider.ts --network worldchain --parameters ignition/parameters/worldchain.json",
+    
     "wipe-service-provider:worldchain": "hardhat ignition wipe chain-480 ServiceProvider#ServiceProvider",
     "deploy-test-token:worldchain": "hardhat ignition deploy ignition/modules/TestToken.ts --network worldchain"
   },

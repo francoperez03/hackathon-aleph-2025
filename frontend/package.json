@@ -23,6 +23,8 @@
     "framer-motion": "^12.5.0",
     "html5-qrcode": "^2.3.8",
     "jose": "^6.0.10",
+    "jsencrypt": "^3.3.2",
+    "libsodium-wrappers": "^0.7.15",
     "lucide-react": "^0.483.0",
     "mini-css-extract-plugin": "^2.9.2",
     "nanoid": "^5.1.4",
@@ -39,6 +41,7 @@
     "viem": "^2.23.5"
   },
   "devDependencies": {
+    "@types/libsodium-wrappers": "^0.7.14",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
