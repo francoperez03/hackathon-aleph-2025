@@ -3,11 +3,12 @@
 import NodeRSA from "encrypt-rsa";
 import { MiniKit } from "@worldcoin/minikit-js";
 import { vpnService } from "./vpn-service";
-import { SERVICE_PROVIDER_ABI } from "@/constants/service-provider";
+import {
+  SERVICE_PROVIDER_ABI,
+  SERVICE_PROVIDER_ADDRESS,
+} from "@/constants/service-provider";
 
 const nodeRSA = new NodeRSA();
-
-const address = "0xeaf070617f52EC79Aad178DeECa7860658dd7506";
 
 export const recommend = async (props: {
   addressToRecommend: `0x${string}`;
@@ -19,7 +20,7 @@ export const recommend = async (props: {
   const payload = await MiniKit.commandsAsync.sendTransaction({
     transaction: [
       {
-        address,
+        address: SERVICE_PROVIDER_ADDRESS,
         abi: SERVICE_PROVIDER_ABI,
         functionName: "recommend",
         args: [props.addressToRecommend, 0, 0, [0, 0, 0, 0, 0, 0, 0, 0]],
@@ -41,7 +42,7 @@ export const requestService = async function (props: { countryId: string }) {
   await MiniKit.commandsAsync.sendTransaction({
     transaction: [
       {
-        address,
+        address: SERVICE_PROVIDER_ADDRESS,
         abi: SERVICE_PROVIDER_ABI,
         functionName: "requestService",
         args: [props.countryId, base64PublicKey],
@@ -50,7 +51,9 @@ export const requestService = async function (props: { countryId: string }) {
   });
 
   while (true) {
-    const serviceRequest = await vpnService.getServiceRequestForUser(address);
+    const serviceRequest = await vpnService.getServiceRequestForUser(
+      SERVICE_PROVIDER_ADDRESS
+    );
 
     if (
       serviceRequest.fulfilled &&
