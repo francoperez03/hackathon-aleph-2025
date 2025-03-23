@@ -47,20 +47,20 @@ export default function Connection() {
       const deadline = Math.floor((Date.now() + 30 * 60 * 1000) / 1000).toString()
 
       // Transfers can also be at most 1 hour in the future.
-      const permitTransfer = {
-        permitted: {
-          token: "0x6a5109b1E0078ee6724D334d2aF740C98196A8EB",
-          amount: '1000000000000000000000',
-        },
-        nonce: Date.now().toString(),
-        deadline,
-      }
+      // const permitTransfer = {
+      //   permitted: {
+      //     token: "0x6a5109b1E0078ee6724D334d2aF740C98196A8EB",
+      //     amount: '1000000000000000000000',
+      //   },
+      //   nonce: Date.now().toString(),
+      //   deadline,
+      // }
     
-      const permitTransferArgsForm = [
-        [permitTransfer.permitted.token, permitTransfer.permitted.amount],
-        permitTransfer.nonce,
-        permitTransfer.deadline,
-      ]
+      // const permitTransferArgsForm = [
+      //   [permitTransfer.permitted.token, permitTransfer.permitted.amount],
+      //   permitTransfer.nonce,
+      //   permitTransfer.deadline,
+      // ]
     
 
 
@@ -73,14 +73,14 @@ export default function Connection() {
             args: [1, sodium.to_base64(keypair.publicKey)],
           },
         ],
-        permit2: [
-          {
-            spender: SERVICE_PROVIDER_ADDRESS,
-            deadline: permitTransfer.deadline,
-            nonce: permitTransfer.nonce,
-            permitted: permitTransfer.permitted
-          }
-        ]
+        // permit2: [
+        //   {
+        //     spender: SERVICE_PROVIDER_ADDRESS,
+        //     deadline: permitTransfer.deadline,
+        //     nonce: permitTransfer.nonce,
+        //     permitted: permitTransfer.permitted
+        //   }
+        // ]
       });
       console.log({ res });
 

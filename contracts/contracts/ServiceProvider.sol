@@ -75,14 +75,14 @@ contract ServiceProvider is Reputation, IServiceProvider {
         }
 
         // withdraw funds from user
-        bool success = paymentToken.transferFrom(
-            msg.sender,
-            address(this),
-            price
-        );
-        if (!success) {
-            revert TransferFailed();
-        }
+        // bool success = paymentToken.transferFrom(
+        //     msg.sender,
+        //     address(this),
+        //     price
+        // );
+        // if (!success) {
+        //     revert TransferFailed();
+        // }
 
         // create request
         userToRequest[msg.sender] = nextRequestId;
