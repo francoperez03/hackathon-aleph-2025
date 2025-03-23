@@ -1,17 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MiniKit } from "@worldcoin/minikit-js";
-import { VerifyBlock } from "@/components/Verify";
-import { AnimatePresence } from "framer-motion";
-import { Recommend } from "@/components/recommend-screen";
-import { Navigation } from "@/components/navigation";
-import { Home } from "@/components/home-screen"
-import { Connection } from "@/components/connection/connection";
 import { motion } from "framer-motion";
 import { Shield, Zap, Lock, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { executeTransaction } from "@/lib/execute-transaction";
 import { useRouter } from "next/navigation";
 
 const features = [
@@ -65,9 +57,7 @@ export default function App() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="mt-20 mb-10 text-center"
       >
-        <h1 className="text-5xl font-bold tracking-tight text-primary">
-          WPN
-        </h1>
+        <h1 className="text-5xl font-bold tracking-tight text-primary">WPN</h1>
         <p className="mt-2 text-sm text-[#666]">Access beyond borders</p>
       </motion.div>
 
