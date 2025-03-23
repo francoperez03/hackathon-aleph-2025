@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Shield, Zap, Lock, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { MiniKit } from "@worldcoin/minikit-js";
 
 const features = [
   {
@@ -56,6 +57,24 @@ export default function App() {
         variant="ghost"
         className="absolute top-6 left-6 w-10 h-10 p-0 bg-primary hover:bg-[#0077b3] text-white shadow-md rounded-md transition-transform active:scale-95"
         onClick={() => router.push("/connection")}
+      >
+        <UserPlus className="h-5 w-5" />
+      </Button>
+
+
+      <Button
+        variant="ghost"
+        className="absolute top-20 left-6 w-10 h-10 p-0 bg-primary hover:bg-[#0077b3] text-white shadow-md rounded-md transition-transform active:scale-95"
+        onClick={async () => {
+          const {commandPayload: generateMessageResult, finalPayload} = await MiniKit.commandsAsync.walletAuth({
+            nonce: "0",
+            requestId: '0', // Optional
+            expirationTime: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
+            notBefore: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+            statement: 'This is my statement and here is a link https://worldcoin.com/apps',
+          })
+          console.log("finalPayload", {finalPayload})
+        }}
       >
         <UserPlus className="h-5 w-5" />
       </Button>
