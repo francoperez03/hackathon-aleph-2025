@@ -66,6 +66,8 @@ export default function Connection() {
     } catch (e) {
       console.error(e);
       window.alert("Error: " + e);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -90,7 +92,10 @@ export default function Connection() {
       }
     };
 
-    fetchVpnStatus();
+    setLoading(true);
+    fetchVpnStatus().finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   if (loading) {
@@ -172,6 +177,27 @@ export default function Connection() {
         </div>
       </div>
     );
+  }
+
+  if (serviceRequest?.fulfilled === false && serviceRequest?.expiresAt === 0n) {
+    <div className="text-center px-4 py-10 flex flex-col h-screen">
+      <div className="flex-1">
+        <h1 className="text-lg font-medium">Pending order</h1>
+        <p className="text-muted-foreground text-sm mt-1 max-w-xs mx-auto">
+          You have a pending order. Please wait a few seconds.
+        </p>
+      </div>
+
+      <div className="flex flex-col">
+        <Button
+          variant="outline"
+          className="mt-4"
+          onClick={() => router.push("/")}
+        >
+          Back
+        </Button>
+      </div>
+    </div>;
   }
 
   return (
