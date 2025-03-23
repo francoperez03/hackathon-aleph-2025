@@ -88,18 +88,6 @@ export default function App() {
             {features[featureIndex].text}
           </p>
         </motion.div>
-
-        {/* <div className="flex space-x-2 mt-40">
-          {features.map((_, i) => (
-            <motion.div
-              key={i}
-              className={`w-3 h-3 rounded-full transition ${
-                i === featureIndex ? "bg-primary scale-110" : "bg-gray-300"
-              }`}
-              animate={{ scale: i === featureIndex ? 1.2 : 1 }}
-            />
-          ))}
-        </div> */}
       </div>
 
       <footer className="absolute bottom-0 w-full py-8 flex flex-col items-center shadow-md bg-gradient-to-t from-gray-100 to-transparent">
@@ -107,7 +95,6 @@ export default function App() {
           {!MiniKit.user && <Login />}
           {MiniKit.user && (
             <Button
-              // className="w-full bg-primary py-6 text-lg text-white hover:bg-[#0077b3] shadow-lg transition-transform active:scale-95"
               className="w-full"
               onClick={() => router.push("/connection")}
             >

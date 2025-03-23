@@ -22,8 +22,6 @@ export class VpnService {
   async getServiceRequestForUser(user: string): Promise<ServiceRequest> {
     try {
       const rawRequest = await this.contract.getServiceRequestForUser(user);
-      console.log("ABC", await this.contract.getServiceRequestForUser("0xf6868Dff09cd83e0bdE34D720643c708b41d5bFB"))
-      console.log("getServiceRequestForUser", {rawRequest})
       const [
         id,
         _user,
