@@ -24,15 +24,18 @@ export default function Connection() {
 
   const onBuy = useCallback(async () => {
     const user = MiniKit.user?.walletAddress;
+    console.log({ user });
+
     if (!user) {
       return;
     }
 
     const { publicKey, privateKey } = nodeRSA.createPrivateAndPublicKeys();
+    console.log({ publicKey, privateKey });
     localStorage.setItem("publicKey", publicKey);
     localStorage.setItem("privateKey", privateKey);
 
-    await MiniKit.commandsAsync.sendTransaction({
+    const res = await MiniKit.commandsAsync.sendTransaction({
       transaction: [
         {
           address: SERVICE_PROVIDER_ADDRESS,
@@ -42,6 +45,7 @@ export default function Connection() {
         },
       ],
     });
+    console.log({ res })
 
     while (true) {
       const serviceRequest = await vpnService.getServiceRequestForUser(user);
@@ -62,7 +66,7 @@ export default function Connection() {
     const fetchVpnStatus = async () => {
       let address = MiniKit.user?.walletAddress;
       if (!address) {
-        address = "0xc6351af7e9a0b6341bf9682488839cb0021f1fda";
+        return;
       }
 
       try {
@@ -96,7 +100,7 @@ export default function Connection() {
   }
 
   return (
-    <div>
+    <div className="p-10">
       <Button onClick={onBuy}>Buy</Button>
     </div>
   );
