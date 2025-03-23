@@ -58,7 +58,7 @@ export default function Connection() {
           serviceRequest.fulfilled &&
           serviceRequest.expiresAt > Date.now() / 1000
         ) {
-          setServiceRequest(serviceRequest);
+          return setServiceRequest(serviceRequest);
         }
 
         console.log("waiting for request fulfill...");
