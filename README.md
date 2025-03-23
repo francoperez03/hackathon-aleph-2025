@@ -1,8 +1,8 @@
-# Private VPN: Decentralized Access to Free Internet
+# World Private Network: Decentralized Access to Free Internet
 
 ## Overview
 
-**Private VPN** is a censorship-resistant VPN service designed for users in countries with heavy internet restrictions, such as Russia, China, and Turkey. Traditional VPNs are often blocked because their data is easily traceable. Our solution leverages **Worldcoin** for user verification, ensuring that only real, trusted users gain access while maintaining strict privacy and security.
+**World Private Network** is a censorship-resistant VPN service designed for users in countries with heavy internet restrictions, such as Russia, China, and Turkey. Traditional VPNs are often blocked because their data is easily traceable. Our solution leverages **Worldcoin** for user verification, ensuring that only real, trusted users gain access while maintaining strict privacy and security.
 
 ## How It Works
 
@@ -16,29 +16,35 @@
 ```mermaid
 sequenceDiagram
     participant UA as Recommender(A)
+    participant W as Worldcoin
     participant UB as Recomended(B)
-    participant R as Reputation
     participant P as Provider
     participant PS as ProviderService
 
-    UA->>R: Recomend
-    R->>R: Increment B reputation
+    UA->>W: Verify
+    W->>UA: ProofOfHumanity
+    UB->>W: Verify
+    W->>UB: ProofOfHumanity
+    
+    UA->>+P: Recomend B
+    P->>-W: CheckHumanityProof
+    W->>P: Ok
+    P->>P: Increment B reputation
 
-    UB ->>+ P: request(usa)
-    P ->>+ R: getRecommendationsCount(UB)
-    R ->>- P: 2
+    UB ->>+ P: requestService()
+    P ->> P: recommendationCountCheck()
     P ->>- UB: Order created
 
     PS ->>+ P: getUnfullfilledOrders()
     P ->>- PS: orders[]
 
     PS ->>+ P: batchFullfill({orderId, encConnection, groupId })
-    P ->> R: Set user group id
+    P ->> P: Set user group id
     P ->>- PS: Ok
 
     PS ->> P: reportCompromisedGroup(groupId)
-    P->>R: reportGroupId
-    R->>R: Slash reputation
+    P->>P: reportGroupId
+    P->>P: Slash reputation
 ```
 
 ## Why This Matters
@@ -51,12 +57,11 @@ sequenceDiagram
 ## Technologies Used
 
 - **Worldcoin**: For user verification and reputation tracking.
-- **Zero-Knowledge Proofs (ZKPs)**: To ensure verifications are privacy-preserving.
 - **End-to-End Encryption**: For distributing VPN credentials securely.
 - **Smart Contracts**: To manage reputation scores and access control in a decentralized manner.
 
 ## Future Roadmap
 
 - Expansion to support **more VPN providers** globally.
-- Privacy preserving recommendations,so there's no track onchain of who recommended and who got recommended.
+- Privacy preserving recommendations, so there's no track onchain of who recommended and who got recommended.
 - Develop a decentralized marketplace for VPN providers, allowing multiple providers to participate, grow, and monetize their services while ensuring diversity and resilience against censorship.
