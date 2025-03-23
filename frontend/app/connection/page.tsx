@@ -49,7 +49,7 @@ export default function Connection() {
             address: SERVICE_PROVIDER_ADDRESS,
             abi: SERVICE_PROVIDER_ABI,
             functionName: "requestService",
-            args: ["1", sodium.to_base64(keypair.publicKey)],
+            args: [1, sodium.to_base64(keypair.publicKey)],
           },
         ],
       });
