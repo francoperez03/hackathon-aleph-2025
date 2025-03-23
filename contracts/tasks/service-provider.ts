@@ -129,6 +129,7 @@ task("fulfill", "List all service providers").setAction(
   }
 );
 
+
 task("report", "Report a corrupted group")
   .addParam("ip", "The ip address that has been compromised")
   .setAction(async (args: TaskArguments, hre: HardhatRuntimeEnvironment) => {
