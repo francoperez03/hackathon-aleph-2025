@@ -37,18 +37,10 @@ export default function Connection() {
       const keypair = await sodium.crypto_box_keypair();
       const privateKey = sodium.to_base64(keypair.privateKey);
       const publicKey = sodium.to_base64(keypair.publicKey);
-      console.log({
-        publicKey,
-        privateKey,
-      });
       localStorage.setItem("publicKey", publicKey);
       localStorage.setItem("privateKey", privateKey);
 
-      const deadline = Math.floor(
-        (Date.now() + 30 * 60 * 1000) / 1000
-      ).toString();
-
-      const res = await MiniKit.commandsAsync.sendTransaction({
+      await MiniKit.commandsAsync.sendTransaction({
         transaction: [
           {
             address: SERVICE_PROVIDER_ADDRESS,
@@ -58,7 +50,6 @@ export default function Connection() {
           },
         ],
       });
-      console.log({ res });
 
       while (true) {
         const serviceRequest = await vpnService.getServiceRequestForUser(user);
@@ -83,12 +74,9 @@ export default function Connection() {
 
   useEffect(() => {
     const fetchVpnStatus = async () => {
-      const user = MiniKit.user;
-      console.log({ user });
       if (!MiniKit.user) return;
 
       let address = ethers.getAddress(MiniKit.user?.walletAddress);
-
       if (!address) {
         return;
       }
@@ -184,7 +172,7 @@ export default function Connection() {
             follow the connect link.
           </p>
 
-          <div className="mt-6 border rounded-md bg-muted text-muted-foreground p-4">
+          <div className="mt-6 border rounded-md bg-muted text-muted-foreground p-4 overflow-auto">
             {decrypted}
           </div>
         </div>

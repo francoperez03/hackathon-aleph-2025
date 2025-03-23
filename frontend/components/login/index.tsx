@@ -45,7 +45,7 @@ export const Login = () => {
   return (
     <div className="flex flex-col items-center">
       {!MiniKit.user ? (
-        <Button onClick={handleLogin} disabled={loading}>
+        <Button onClick={handleLogin} disabled={loading} className="w-full">
           {loading ? "Connecting..." : "Login"}
         </Button>
       ) : (
