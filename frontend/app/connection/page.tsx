@@ -108,7 +108,7 @@ export default function Connection() {
       <div className="text-center px-4 py-10 flex flex-col h-screen">
         <div className="flex-1">
           <h1 className="text-lg font-medium">
-            You don't have enough recommendations
+            {"You don't have enough recommendations"}
           </h1>
           <p className="text-muted-foreground text-sm mt-1 max-w-xs mx-auto">
             You need at least one recomendation to access the VPN access details

@@ -6,6 +6,7 @@ import { Shield, Zap, Lock, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { MiniKit } from "@worldcoin/minikit-js";
+import { Login } from "@/components/login";
 
 const features = [
   {
@@ -44,40 +45,48 @@ export default function App() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Button
-        variant="ghost"
-        className="absolute top-6 right-6 w-10 h-10 p-0 bg-primary hover:bg-[#0077b3] text-white shadow-md rounded-md transition-transform active:scale-95"
-        onClick={() => router.push("/recommend")}
-      >
-        <UserPlus className="h-5 w-5" />
-      </Button>
+      {MiniKit.user && (
+        <>
+          <Button
+            variant="ghost"
+            className="absolute top-6 right-6 w-10 h-10 p-0 bg-primary hover:bg-[#0077b3] text-white shadow-md rounded-md transition-transform active:scale-95"
+            onClick={() => router.push("/recommend")}
+          >
+            <UserPlus className="h-5 w-5" />
+          </Button>
 
+          <Button
+            variant="ghost"
+            className="absolute top-6 left-6 w-10 h-10 p-0 bg-primary hover:bg-[#0077b3] text-white shadow-md rounded-md transition-transform active:scale-95"
+            onClick={() => router.push("/connection")}
+          >
+            <UserPlus className="h-5 w-5" />
+          </Button>
 
-      <Button
-        variant="ghost"
-        className="absolute top-6 left-6 w-10 h-10 p-0 bg-primary hover:bg-[#0077b3] text-white shadow-md rounded-md transition-transform active:scale-95"
-        onClick={() => router.push("/connection")}
-      >
-        <UserPlus className="h-5 w-5" />
-      </Button>
-
-
-      <Button
-        variant="ghost"
-        className="absolute top-20 left-6 w-10 h-10 p-0 bg-primary hover:bg-[#0077b3] text-white shadow-md rounded-md transition-transform active:scale-95"
-        onClick={async () => {
-          const {commandPayload: generateMessageResult, finalPayload} = await MiniKit.commandsAsync.walletAuth({
-            nonce: "0",
-            requestId: '0', // Optional
-            expirationTime: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
-            notBefore: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
-            statement: 'This is my statement and here is a link https://worldcoin.com/apps',
-          })
-          console.log("finalPayload", {finalPayload})
-        }}
-      >
-        <UserPlus className="h-5 w-5" />
-      </Button>
+          <Button
+            variant="ghost"
+            className="absolute top-20 left-6 w-10 h-10 p-0 bg-primary hover:bg-[#0077b3] text-white shadow-md rounded-md transition-transform active:scale-95"
+            onClick={async () => {
+              const { commandPayload: generateMessageResult, finalPayload } =
+                await MiniKit.commandsAsync.walletAuth({
+                  nonce: "0",
+                  requestId: "0", // Optional
+                  expirationTime: new Date(
+                    new Date().getTime() + 7 * 24 * 60 * 60 * 1000
+                  ),
+                  notBefore: new Date(
+                    new Date().getTime() - 24 * 60 * 60 * 1000
+                  ),
+                  statement:
+                    "This is my statement and here is a link https://worldcoin.com/apps",
+                });
+              console.log("finalPayload", { finalPayload });
+            }}
+          >
+            <UserPlus className="h-5 w-5" />
+          </Button>
+        </>
+      )}
 
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
@@ -128,12 +137,15 @@ export default function App() {
 
       <footer className="absolute bottom-0 w-full py-8 flex flex-col items-center shadow-md bg-gradient-to-t from-gray-100 to-transparent">
         <div className="w-full max-w-xs">
-          <Button
-            className="w-full bg-primary py-6 text-lg text-white hover:bg-[#0077b3] shadow-lg transition-transform active:scale-95"
-            onClick={() => router.push("/connection")}
-          >
-            Connect Now
-          </Button>
+          {!MiniKit.user && <Login />}
+          {MiniKit.user && (
+            <Button
+              className="w-full bg-primary py-6 text-lg text-white hover:bg-[#0077b3] shadow-lg transition-transform active:scale-95"
+              onClick={() => router.push("/connection")}
+            >
+              {!MiniKit.user ? "Login" : "Connect Now"}
+            </Button>
+          )}
           <p className="text-xs text-center text-[#999] mt-3">
             Secure & fast access anywhere.
           </p>
