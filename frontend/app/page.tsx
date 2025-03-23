@@ -102,7 +102,7 @@ export default function App() {
         <div className="w-full max-w-xs">
           <Button
             className="w-full bg-primary py-6 text-lg text-white hover:bg-[#0077b3] shadow-lg transition-transform active:scale-95"
-            onClick={() => router.push("/recommend")}
+            onClick={() => router.push("/connection")}
           >
             Connect Now
           </Button>
