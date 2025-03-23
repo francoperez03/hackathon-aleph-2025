@@ -5,7 +5,7 @@ import { generateGroupId } from "../lib/utils";
 
 const nodeRSA = new NodeRSA();
 
-const KEYS_POOL = [
+export const KEYS_POOL = [
   {
     ip: "3.91.104.137",
     key: "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpZeGpsS0Z3dGltMWJhOXRvczByeDBO@3.91.104.137:35942/?outline=1",
