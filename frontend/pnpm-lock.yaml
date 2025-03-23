@@ -32,6 +32,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      encrypt-rsa:
+        specifier: ^3.3.0
+        version: 3.3.0
       eruda:
         specifier: ^3.2.3
         version: 3.2.3
@@ -1175,6 +1178,9 @@ packages:
 
   emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
+
+  encrypt-rsa@3.3.0:
+    resolution: {integrity: sha512-pIKuD2C/k9Vc5S7t4xMPVeXOE+rlXqzGotJc1yO0YLDr3DGy/jlnxhA2lxyvrEfO0J3R9bkl6vFby5Yd3ajNVA==}
 
   enhanced-resolve@5.17.1:
     resolution: {integrity: sha512-LMHl3dXhTcfv8gM4kEzIUeTQ+7fpdA0l2tUf34BddXPkz2A5xJ5L/Pchd5BL6rdccM9QGvu0sWZzK1Z1t4wwyg==}
@@ -3781,6 +3787,8 @@ snapshots:
   emoji-regex@8.0.0: {}
 
   emoji-regex@9.2.2: {}
+
+  encrypt-rsa@3.3.0: {}
 
   enhanced-resolve@5.17.1:
     dependencies:
