@@ -36,7 +36,7 @@ export default function RecommendPage() {
       {receiveRecommendation ? (
         <div className="flex flex-col h-full pt-10">
           <div className="text-center flex-1">
-            <h1 className="text-lg font-bold text-[#333]">
+            <h1 className="text-lg font-bold text-gray-800">
               Receive recommendations
             </h1>
             <div className="text-sm text-muted-foreground mt-1 max-w-xs mx-auto">
@@ -83,7 +83,7 @@ export default function RecommendPage() {
       ) : (
         <div className="flex flex-col h-full pt-10">
           <div className="text-center flex-1">
-            <h1 className="text-lg font-bold text-[#333]">
+            <h1 className="text-lg font-bold text-gray-800">
               Give recommendation
             </h1>
             <div className="text-sm text-muted-foreground mt-2 max-w-xs mx-auto">
@@ -114,7 +114,7 @@ export default function RecommendPage() {
                 <DialogHeader>
                   <DialogTitle>Scan</DialogTitle>
                   <DialogDescription>
-                    Make changes to your profile here. Click save when you're
+                    Make changes to your profile here. Click save when you&apos;re
                     done.
                   </DialogDescription>
                 </DialogHeader>

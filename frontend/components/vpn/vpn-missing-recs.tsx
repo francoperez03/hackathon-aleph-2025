@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Clock } from "lucide-react";
-import QRCodeGenerator from "../qr/qr-generate";
+import {QRCodeGenerator} from "@/components/qr/qr-generate";
 
 interface Props {
   address: string;
@@ -24,7 +24,7 @@ export default function VpnMissingRecs({ address }: Props) {
         You need at least 1 recommendation to access the VPN.
       </p>
       <div>Get recommended!</div>
-      <QRCodeGenerator text={address ?? "0x"} />
+      <QRCodeGenerator data={address ?? "0x"} />
     </motion.div>
   );
 }

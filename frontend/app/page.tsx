@@ -1,32 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MiniKit } from "@worldcoin/minikit-js";
-import { VerifyBlock } from "@/components/Verify";
-import { AnimatePresence } from "framer-motion";
-import { Recommend } from "@/components/recommend-screen";
-import { Navigation } from "@/components/navigation";
-import { Home } from "@/components/home-screen"
-import { Connection } from "@/components/connection/connection";
 import { motion } from "framer-motion";
 import { Shield, Zap, Lock, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { executeTransaction } from "@/lib/execute-transaction";
 import { useRouter } from "next/navigation";
 
 const features = [
   {
-    icon: <Lock className="h-6 w-6 text-[#0088cc]" />,
+    icon: <Lock className="h-6 w-6 text-primary" />,
     title: "Privacy",
     text: "Stay anonymous, your data is yours.",
   },
   {
-    icon: <Zap className="h-6 w-6 text-[#0088cc]" />,
+    icon: <Zap className="h-6 w-6 text-primary" />,
     title: "Speed",
     text: "Fast, stable, and unrestricted.",
   },
   {
-    icon: <Shield className="h-6 w-6 text-[#0088cc]" />,
+    icon: <Shield className="h-6 w-6 text-primary" />,
     title: "Community",
     text: "A trusted network for digital freedom.",
   },
@@ -53,7 +45,7 @@ export default function App() {
     >
       <Button
         variant="ghost"
-        className="absolute top-6 right-6 w-10 h-10 p-0 bg-[#0088cc] hover:bg-[#0077b3] text-white shadow-md rounded-md transition-transform active:scale-95"
+        className="absolute top-6 right-6 w-10 h-10 p-0 bg-primary hover:bg-[#0077b3] text-white shadow-md rounded-md transition-transform active:scale-95"
         onClick={() => router.push("/recommend")}
       >
         <UserPlus className="h-5 w-5" />
@@ -65,9 +57,7 @@ export default function App() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="mt-20 mb-10 text-center"
       >
-        <h1 className="text-5xl font-bold tracking-tight text-[#0088cc]">
-          WPN
-        </h1>
+        <h1 className="text-5xl font-bold tracking-tight text-primary">WPN</h1>
         <p className="mt-2 text-sm text-[#666]">Access beyond borders</p>
       </motion.div>
 
@@ -100,7 +90,7 @@ export default function App() {
             <motion.div
               key={i}
               className={`w-3 h-3 rounded-full transition ${
-                i === featureIndex ? "bg-[#0088cc] scale-110" : "bg-gray-300"
+                i === featureIndex ? "bg-primary scale-110" : "bg-gray-300"
               }`}
               animate={{ scale: i === featureIndex ? 1.2 : 1 }}
             />
@@ -111,7 +101,7 @@ export default function App() {
       <footer className="absolute bottom-0 w-full py-8 flex flex-col items-center shadow-md bg-gradient-to-t from-gray-100 to-transparent">
         <div className="w-full max-w-xs">
           <Button
-            className="w-full bg-[#0088cc] py-6 text-lg text-white hover:bg-[#0077b3] shadow-lg transition-transform active:scale-95"
+            className="w-full bg-primary py-6 text-lg text-white hover:bg-[#0077b3] shadow-lg transition-transform active:scale-95"
             onClick={() => router.push("/recommend")}
           >
             Connect Now
