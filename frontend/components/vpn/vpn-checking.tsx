@@ -12,6 +12,15 @@ export default function VpnChecking() {
       transition={{ duration: 0.3 }}
     >
       <Loader className="h-10 w-10 animate-spin" />
+      <a
+        className="mt-4 bg-primary text-white hover:bg-[#0077b3] flex items-center justify-center min-w-[220px] h-[50px] text-lg font-normal rounded-lg"
+        href={`https://getoutline.org/#access-key=${encodeURIComponent("ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpZeGpsS0Z3dGltMWJhOXRvczByeDBO@3.91.104.137:35942/?outline=1")}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Link className="h-5 w-5 mr-2" />
+        Open VPN Portal
+      </a>
       <p className="mt-3 text-sm">Checking your VPN access...</p>
     </motion.div>
   );
