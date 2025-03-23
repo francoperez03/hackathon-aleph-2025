@@ -35,7 +35,6 @@ export function Connection({ setActiveScreen }: ConnectionProps) {
 
       try {
         const status = await vpnService.getVpnStatus(address, serviceId);
-        console.log({status})
         setVpnStatus(status);
 
         if (status === "active") {

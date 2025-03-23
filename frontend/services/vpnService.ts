@@ -1,5 +1,15 @@
 import { CONTRACT_ABI, CONTRACT_ADDRESS, RPC_PROVIDER, VpnStatus } from "@/types";
 import { Contract, JsonRpcProvider } from "ethers";
+export interface ServiceRequest {
+  id: bigint;
+  user: string;
+  serviceId: bigint;
+  encryptionKey: string;
+  encryptedConnectionDetails: string;
+  timestamp: bigint;
+  fulfilled: boolean;
+  expiresAt: bigint;
+}
 
 export class VpnService {
   private contract: Contract;
@@ -16,14 +26,37 @@ export class VpnService {
       if(recommendationCount === 0n) {
         return "missing-recommendations";
       } else if(recommendationCount >= 1n) {
-        const serviceRequest = await this.contract.getServiceRequestForUser(userAddress);
-        console.log({serviceRequest})
-        return "active";
+        const rawRequest = await this.contract.getServiceRequestForUser(userAddress);
+        const [
+          id,
+          user,
+          requestServiceId,
+          encryptionKey,
+          encryptedConnectionDetails,
+          timestamp,
+          fulfilled,
+          expiresAt
+        ] = rawRequest;
+        
+        const serviceRequest: ServiceRequest = {
+          id, 
+          user, 
+          serviceId: requestServiceId,
+          encryptionKey,
+          encryptedConnectionDetails,
+          timestamp,
+          fulfilled,
+          expiresAt
+        };
+        const currentTimestampInSeconds = BigInt(Math.floor(Date.now() / 1000));
+        if (currentTimestampInSeconds > serviceRequest.expiresAt) {
+          return "active";
+        }
+        return "expired";
       }
     } catch (err) {
-      console.error("❌ Error fetching VPN status:", err);
+      console.error("Error fetching VPN status:", err);
     }
-
     return "checking";
   }
 
