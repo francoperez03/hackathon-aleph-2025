@@ -5,455 +5,708 @@ export const RPC_PROVIDER = "https://worldchain-mainnet.g.alchemy.com/public"
 
 export const SERVICE_PROVIDER_ABI = [
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: "contract IWorldID",
-        name: "_worldId",
-        type: "address",
+        "internalType": "contract IWorldID",
+        "name": "_worldId",
+        "type": "address"
       },
       {
-        internalType: "string",
-        name: "_appId",
-        type: "string",
+        "internalType": "string",
+        "name": "_appId",
+        "type": "string"
       },
       {
-        internalType: "string",
-        name: "_actionId",
-        type: "string",
+        "internalType": "string",
+        "name": "_actionId",
+        "type": "string"
       },
       {
-        internalType: "contract IERC20",
-        name: "_token",
-        type: "address",
+        "internalType": "contract IERC20",
+        "name": "_token",
+        "type": "address"
       },
       {
-        internalType: "uint256",
-        name: "_price",
-        type: "uint256",
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
       },
       {
-        internalType: "uint256",
-        name: "_expirationTime",
-        type: "uint256",
+        "internalType": "uint256",
+        "name": "_expirationTime",
+        "type": "uint256"
       },
+      {
+        "internalType": "uint256",
+        "name": "_minReputation",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "nonpayable",
-    type: "constructor",
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "nullifierHash",
-        type: "uint256",
-      },
-    ],
-    name: "DuplicateNullifier",
-    type: "error",
+    "inputs": [],
+    "name": "AlreadyRecommended",
+    "type": "error"
   },
   {
-    inputs: [],
-    name: "InsufficientBalance",
-    type: "error",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "nullifierHash",
+        "type": "uint256"
+      }
+    ],
+    "name": "DuplicateNullifier",
+    "type": "error"
   },
   {
-    inputs: [],
-    name: "NotEnoughReputation",
-    type: "error",
+    "inputs": [],
+    "name": "InsufficientBalance",
+    "type": "error"
   },
   {
-    inputs: [],
-    name: "OnlyProvider",
-    type: "error",
+    "inputs": [],
+    "name": "NotEnoughReputation",
+    "type": "error"
   },
   {
-    inputs: [],
-    name: "TransferFailed",
-    type: "error",
+    "inputs": [],
+    "name": "OnlyProvider",
+    "type": "error"
   },
   {
-    inputs: [],
-    name: "ZeroAmount",
-    type: "error",
+    "inputs": [],
+    "name": "TransferFailed",
+    "type": "error"
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "encryptedConnectionDetails",
-        type: "string",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "expiresAt",
-        type: "uint256",
-      },
-    ],
-    name: "ServiceFulfilled",
-    type: "event",
+    "inputs": [],
+    "name": "ZeroAmount",
+    "type": "error"
   },
   {
-    anonymous: false,
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        indexed: true,
-        internalType: "address",
-        name: "user",
-        type: "address",
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "requestId",
+        "type": "uint256"
       },
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "serviceId",
-        type: "uint256",
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "serviceId",
+        "type": "uint256"
       },
       {
-        indexed: false,
-        internalType: "string",
-        name: "encryptionKey",
-        type: "string",
+        "indexed": false,
+        "internalType": "string",
+        "name": "encryptionKey",
+        "type": "string"
       },
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "timestamp",
-        type: "uint256",
-      },
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
     ],
-    name: "ServiceRequest",
-    type: "event",
+    "name": "NewServiceRequest",
+    "type": "event"
   },
   {
-    anonymous: false,
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        indexed: false,
-        internalType: "uint256",
-        name: "nullifierHash",
-        type: "uint256",
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "requestId",
+        "type": "uint256"
       },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "encryptedConnectionDetails",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "expiresAt",
+        "type": "uint256"
+      }
     ],
-    name: "Verified",
-    type: "event",
+    "name": "ServiceFulfilled",
+    "type": "event"
   },
   {
-    anonymous: false,
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        indexed: true,
-        internalType: "address",
-        name: "provider",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "nullifierHash",
+        "type": "uint256"
+      }
     ],
-    name: "Withdrawal",
-    type: "event",
+    "name": "Verified",
+    "type": "event"
   },
   {
-    inputs: [],
-    name: "balance",
-    outputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
+        "indexed": true,
+        "internalType": "address",
+        "name": "provider",
+        "type": "address"
       },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "name": "Withdrawal",
+    "type": "event"
   },
   {
-    inputs: [],
-    name: "expirationTime",
-    outputs: [
+    "inputs": [],
+    "name": "balance",
+    "outputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: "address",
-        name: "user",
-        type: "address",
+        "internalType": "uint256[]",
+        "name": "requestId",
+        "type": "uint256[]"
       },
       {
-        internalType: "bytes32",
-        name: "groupId",
-        type: "bytes32",
+        "internalType": "bytes32[]",
+        "name": "groupId",
+        "type": "bytes32[]"
       },
       {
-        internalType: "string",
-        name: "encryptedConnectionDetails",
-        type: "string",
-      },
+        "internalType": "string[]",
+        "name": "encryptedConnectionDetails",
+        "type": "string[]"
+      }
     ],
-    name: "fulfillOrder",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    "name": "batchFulfill",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [],
+    "name": "expirationTime",
+    "outputs": [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    name: "givenRecommendationsCount",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
+        "internalType": "uint256",
+        "name": "requestId",
+        "type": "uint256"
       },
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
+        "internalType": "bytes32",
+        "name": "groupId",
+        "type": "bytes32"
       },
+      {
+        "internalType": "string",
+        "name": "encryptedConnectionDetails",
+        "type": "string"
+      }
     ],
-    name: "groupIdToUsers",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
+    "name": "fulfill",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
     ],
-    name: "nullifierHashes",
-    outputs: [
+    "name": "getServiceRequestForUser",
+    "outputs": [
       {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "serviceId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "encryptionKey",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "encryptedConnectionDetails",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "fulfilled",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "expiresAt",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IServiceProviderStructs.ServiceRequest",
+        "name": "",
+        "type": "tuple"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "paymentToken",
-    outputs: [
+    "inputs": [],
+    "name": "getUnfulfilledRequests",
+    "outputs": [
       {
-        internalType: "contract IERC20",
-        name: "",
-        type: "address",
-      },
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "serviceId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "encryptionKey",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "encryptedConnectionDetails",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "fulfilled",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "expiresAt",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IServiceProviderStructs.ServiceRequest[]",
+        "name": "",
+        "type": "tuple[]"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "price",
-    outputs: [
+    "inputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
       },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "name": "groupIdToUsers",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: "provider",
-    outputs: [
+    "inputs": [],
+    "name": "minReputation",
+    "outputs": [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [],
+    "name": "nextRequestId",
+    "outputs": [
       {
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "root",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "nullifierHash",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256[8]",
-        name: "proof",
-        type: "uint256[8]",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    name: "recommend",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    name: "recommendations",
-    outputs: [
+    "name": "nullifierHashes",
+    "outputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [],
+    "name": "paymentToken",
+    "outputs": [
       {
-        internalType: "address",
-        name: "user",
-        type: "address",
-      },
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
     ],
-    name: "recommendationsCount",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [],
+    "name": "price",
+    "outputs": [
       {
-        internalType: "bytes32",
-        name: "groupId",
-        type: "bytes32",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    name: "reportGroupId",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [],
+    "name": "provider",
+    "outputs": [
       {
-        internalType: "uint256",
-        name: "serviceId",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "encryptionKey",
-        type: "string",
-      },
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
-    name: "requestService",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: "uint256",
-        name: "_price",
-        type: "uint256",
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
       },
+      {
+        "internalType": "uint256",
+        "name": "root",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "nullifierHash",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256[8]",
+        "name": "proof",
+        "type": "uint256[8]"
+      }
     ],
-    name: "setPrice",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    "name": "recommend",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
-    name: "userToGroupId",
-    outputs: [
+    "name": "recommendations",
+    "outputs": [
       {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
     ],
-    name: "withdraw",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    "name": "recommendationsCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "recommended",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "groupId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "reportGroupId",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "serviceId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "encryptionKey",
+        "type": "string"
+      }
+    ],
+    "name": "requestService",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "requests",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "serviceId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "encryptionKey",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "encryptedConnectionDetails",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "fulfilled",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "expiresAt",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      }
+    ],
+    "name": "setPrice",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "userToGroupId",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "userToRequest",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
 ];
