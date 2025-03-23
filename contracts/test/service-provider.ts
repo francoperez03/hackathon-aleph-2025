@@ -3,8 +3,7 @@ import hre from "hardhat";
 import NodeRSA from "encrypt-rsa";
 import { generateGroupId } from "../lib/utils";
 import { assert } from "console";
-
-const nodeRSA = new NodeRSA();
+import sodium from "libsodium-wrappers";
 
 describe("ServiceProvider", function () {
   async function deploymentFixture() {
@@ -54,10 +53,10 @@ describe("ServiceProvider", function () {
       .recommend(customer.address, 0n, 0n, [0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n]);
 
     // customer creates encryption keys and requests service
-    const { publicKey, privateKey } = nodeRSA.createPrivateAndPublicKeys();
+    const keypair = await sodium.crypto_box_keypair();
     await serviceProvider
       .connect(customer)
-      .requestService(1, Buffer.from(publicKey).toString("base64"));
+      .requestService(1, sodium.to_base64(keypair.publicKey));
 
     // provider get pending orders
     const requests = await serviceProvider.getUnfulfilledRequests();
@@ -70,11 +69,9 @@ describe("ServiceProvider", function () {
         return {
           id: r.id,
           groupId: generateGroupId(key),
-          encryptedConnectionDetails:
-            await nodeRSA.encryptStringWithRsaPublicKey({
-              text: key,
-              publicKey: Buffer.from(r.encryptionKey, "base64").toString(),
-            }),
+          encryptedConnectionDetails: sodium.to_base64(
+            sodium.crypto_box_seal(key, sodium.from_base64(r.encryptionKey))
+          ),
         };
       })
     );
@@ -95,10 +92,13 @@ describe("ServiceProvider", function () {
     );
 
     // customer decrypts
-    const decrypted = nodeRSA.decryptStringWithRsaPrivateKey({
-      text: serviceRequest.encryptedConnectionDetails,
-      privateKey,
-    });
+    const decrypted = sodium.to_string(
+      sodium.crypto_box_seal_open(
+        sodium.from_base64(serviceRequest.encryptedConnectionDetails),
+        keypair.publicKey,
+        keypair.privateKey
+      )
+    );
     console.log("Your connection details:", decrypted);
   });
 

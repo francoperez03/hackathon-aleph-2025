@@ -10,7 +10,6 @@
     "wipe-service-provider:holesky": "hardhat ignition wipe chain-17000 ServiceProvider#ServiceProvider",
     "deploy-test-token:holesky": "hardhat ignition deploy ignition/modules/TestToken.ts --network holesky",
     "deploy-service-provider:worldchain": "hardhat ignition deploy ignition/modules/ServiceProvider.ts --network worldchain --parameters ignition/parameters/worldchain.json",
-    
     "wipe-service-provider:worldchain": "hardhat ignition wipe chain-480 ServiceProvider#ServiceProvider",
     "deploy-test-token:worldchain": "hardhat ignition deploy ignition/modules/TestToken.ts --network worldchain"
   },
@@ -18,12 +17,14 @@
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@openzeppelin/hardhat-upgrades": "^3.9.0",
     "@types/jest": "^29.5.14",
+    "@types/libsodium-wrappers": "^0.7.14",
     "hardhat": "^2.22.19"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.2.0",
     "dotenv": "^16.4.7",
     "encrypt-rsa": "^3.3.0",
+    "libsodium-wrappers": "^0.7.15",
     "solhint": "^5.0.5"
   }
 }

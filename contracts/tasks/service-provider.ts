@@ -1,9 +1,7 @@
 import { task, types } from "hardhat/config";
 import { HardhatRuntimeEnvironment, TaskArguments } from "hardhat/types";
-import NodeRSA from "encrypt-rsa";
+import sodium from "libsodium-wrappers";
 import { generateGroupId } from "../lib/utils";
-
-const nodeRSA = new NodeRSA();
 
 const KEYS_POOL = [
   {
@@ -41,10 +39,11 @@ task("connect", "Connect to the vpn")
       // create requests
       console.log("creating request...");
       const customer = (await hre.ethers.provider.getSigner()).address;
-      const { publicKey, privateKey } = nodeRSA.createPrivateAndPublicKeys();
+
+      const keypair = await sodium.crypto_box_keypair();
       const request = await serviceProvider.requestService(
         1,
-        Buffer.from(publicKey).toString("base64")
+        sodium.to_base64(keypair.publicKey)
       );
       await request.wait();
       console.log("request tx: ", request.hash);
@@ -60,10 +59,13 @@ task("connect", "Connect to the vpn")
           serviceRequest.fulfilled &&
           serviceRequest.expiresAt > Date.now() / 1000
         ) {
-          const decrypted = nodeRSA.decryptStringWithRsaPrivateKey({
-            text: serviceRequest.encryptedConnectionDetails,
-            privateKey,
-          });
+          const decrypted = sodium.to_string(
+            sodium.crypto_box_seal_open(
+              sodium.from_base64(serviceRequest.encryptedConnectionDetails),
+              keypair.publicKey,
+              keypair.privateKey
+            )
+          );
           console.log("Your connection details:", decrypted);
 
           return;
@@ -77,7 +79,6 @@ task("connect", "Connect to the vpn")
 
 task("fulfill", "List all service providers").setAction(
   async (taskArguments: TaskArguments, hre: HardhatRuntimeEnvironment) => {
-    const { chainId } = await hre.ethers.provider.getNetwork();
     const serviceProvider = await hre.ethers.getContractAt(
       "ServiceProvider",
       await CONTRACT_ADDRESSES(hre, "ServiceProvider")
@@ -105,11 +106,12 @@ task("fulfill", "List all service providers").setAction(
             return {
               id: r.id,
               groupId: generateGroupId(key.ip),
-              encryptedConnectionDetails:
-                await nodeRSA.encryptStringWithRsaPublicKey({
-                  text: key.key,
-                  publicKey: Buffer.from(r.encryptionKey, "base64").toString(),
-                }),
+              encryptedConnectionDetails: sodium.to_base64(
+                sodium.crypto_box_seal(
+                  key.key,
+                  sodium.from_base64(r.encryptionKey)
+                )
+              ),
             };
           })
         )
@@ -128,7 +130,6 @@ task("fulfill", "List all service providers").setAction(
     } while (true);
   }
 );
-
 
 task("report", "Report a corrupted group")
   .addParam("ip", "The ip address that has been compromised")

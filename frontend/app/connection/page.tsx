@@ -34,8 +34,8 @@ export default function Connection() {
     try {
       await sodium.ready;
       const keypair = await sodium.crypto_box_keypair();
-      const privateKey = "0x" + sodium.to_hex(keypair.privateKey);
-      const publicKey = "0x" + sodium.to_hex(keypair.publicKey);
+      const privateKey =sodium.to_base64(keypair.privateKey)
+      const publicKey = sodium.to_base64(keypair.publicKey)
       console.log({
         publicKey,
         privateKey,
@@ -49,7 +49,7 @@ export default function Connection() {
             address: SERVICE_PROVIDER_ADDRESS,
             abi: SERVICE_PROVIDER_ABI,
             functionName: "requestService",
-            args: ["1", publicKey],
+            args: ["1", sodium.to_base64(keypair.publicKey)],
           },
         ],
       });
@@ -105,14 +105,19 @@ export default function Connection() {
 
   useEffect(() => {
     sodium.ready.then(() => {
+      console.log({
+        a: sodium.from_base64(localStorage.getItem("publicKey") || ""),
+        b: sodium.from_base64(localStorage.getItem("privateKey") || "")
+      })
+
       if (!serviceRequest) {
         return;
       }
 
       const decrypted = sodium.crypto_box_seal_open(
         serviceRequest.encryptedConnectionDetails,
-        sodium.from_hex(localStorage.getItem("publicKey") || ""),
-        sodium.from_hex(localStorage.getItem("privateKey") || "")
+        sodium.from_base64(localStorage.getItem("publicKey") || ""),
+        sodium.from_base64(localStorage.getItem("privateKey") || "")
       );
       setDecrypted(sodium.to_string(decrypted));
     })
