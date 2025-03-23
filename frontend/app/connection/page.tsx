@@ -11,6 +11,7 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import sodium from "libsodium-wrappers";
+import { ethers } from "ethers";
 
 export default function Connection() {
   const router = useRouter();
@@ -52,6 +53,17 @@ export default function Connection() {
             args: [1, sodium.to_base64(keypair.publicKey)],
           },
         ],
+        permit2: [
+          {
+            spender: SERVICE_PROVIDER_ADDRESS,
+            deadline: Math.floor((Date.now() + 30 * 60 * 1000) / 1000).toString(),
+            nonce: Date.now().toString(),
+            permitted: {
+              amount: 1000000000000000000000000000000000000000000000000000000,
+              token: SERVICE_PROVIDER_ADDRESS
+            }
+          }
+        ]
       });
       console.log({ res });
 
