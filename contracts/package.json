@@ -11,7 +11,8 @@
     "deploy-test-token:holesky": "hardhat ignition deploy ignition/modules/TestToken.ts --network holesky",
     "deploy-service-provider:worldchain": "hardhat ignition deploy ignition/modules/ServiceProvider.ts --network worldchain --parameters ignition/parameters/worldchain.json",
     "wipe-service-provider:worldchain": "hardhat ignition wipe chain-480 ServiceProvider#ServiceProvider",
-    "deploy-test-token:worldchain": "hardhat ignition deploy ignition/modules/TestToken.ts --network worldchain"
+    "deploy-test-token:worldchain": "hardhat ignition deploy ignition/modules/TestToken.ts --network worldchain",
+    "wipe-test-token:worldchain": "hardhat ignition wipe chain-480 TestToken#TestToken"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
