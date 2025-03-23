@@ -35,8 +35,8 @@ export default function Connection() {
     try {
       await sodium.ready;
       const keypair = await sodium.crypto_box_keypair();
-      const privateKey =sodium.to_base64(keypair.privateKey)
-      const publicKey = sodium.to_base64(keypair.publicKey)
+      const privateKey = sodium.to_base64(keypair.privateKey);
+      const publicKey = sodium.to_base64(keypair.publicKey);
       console.log({
         publicKey,
         privateKey,
@@ -44,7 +44,9 @@ export default function Connection() {
       localStorage.setItem("publicKey", publicKey);
       localStorage.setItem("privateKey", privateKey);
 
-      const deadline = Math.floor((Date.now() + 30 * 60 * 1000) / 1000).toString()
+      const deadline = Math.floor(
+        (Date.now() + 30 * 60 * 1000) / 1000
+      ).toString();
 
       // Transfers can also be at most 1 hour in the future.
       // const permitTransfer = {
@@ -55,14 +57,12 @@ export default function Connection() {
       //   nonce: Date.now().toString(),
       //   deadline,
       // }
-    
+
       // const permitTransferArgsForm = [
       //   [permitTransfer.permitted.token, permitTransfer.permitted.amount],
       //   permitTransfer.nonce,
       //   permitTransfer.deadline,
       // ]
-    
-
 
       const res = await MiniKit.commandsAsync.sendTransaction({
         transaction: [
@@ -109,8 +109,10 @@ export default function Connection() {
     const fetchVpnStatus = async () => {
       const user = MiniKit.user;
       console.log({ user });
+      if (!MiniKit.user) return;
 
-      let address = MiniKit.user?.walletAddress;
+      let address = ethers.getAddress(MiniKit.user?.walletAddress);
+
       if (!address) {
         return;
       }
@@ -133,27 +135,28 @@ export default function Connection() {
   }, []);
 
   useEffect(() => {
-    sodium.ready.then(() => {
-      console.log({
-        a: sodium.from_base64(localStorage.getItem("publicKey") || ""),
-        b: sodium.from_base64(localStorage.getItem("privateKey") || ""),
-        serviceRequest
+    if (!serviceRequest) {
+      return;
+    }
+
+    sodium.ready
+      .then(() => {
+        console.log({
+          a: sodium.from_base64(localStorage.getItem("publicKey") || ""),
+          b: sodium.from_base64(localStorage.getItem("privateKey") || ""),
+          serviceRequest,
+        });
+
+        const decrypted = sodium.crypto_box_seal_open(
+          serviceRequest.encryptedConnectionDetails,
+          sodium.from_base64(localStorage.getItem("publicKey") || ""),
+          sodium.from_base64(localStorage.getItem("privateKey") || "")
+        );
+        setDecrypted(sodium.to_string(decrypted));
       })
-
-      if (!serviceRequest) {
-        return;
-      }
-
-      const decrypted = sodium.crypto_box_seal_open(
-        serviceRequest.encryptedConnectionDetails,
-        sodium.from_base64(localStorage.getItem("publicKey") || ""),
-        sodium.from_base64(localStorage.getItem("privateKey") || "")
-      );
-      setDecrypted(sodium.to_string(decrypted));
-    }).catch(e => {
-      console.log({e})
-    })
-
+      .catch((e) => {
+        console.log({ e });
+      });
   }, [serviceRequest]);
 
   if (loading) {
