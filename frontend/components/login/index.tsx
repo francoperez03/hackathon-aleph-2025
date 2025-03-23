@@ -15,11 +15,6 @@ const walletAuthInput = (nonce: string): WalletAuthInput => {
   };
 };
 
-type User = {
-  walletAddress: string;
-  username: string | null;
-  profilePictureUrl: string | null;
-};
 
 export const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -29,8 +24,9 @@ export const Login = () => {
     try {
       setLoading(true);
 
+
       const { finalPayload } = await MiniKit.commandsAsync.walletAuth(
-        walletAuthInput("nonce")
+        walletAuthInput("SomeNonceToOperate")
       );
 
       if (finalPayload.status === "error") {
