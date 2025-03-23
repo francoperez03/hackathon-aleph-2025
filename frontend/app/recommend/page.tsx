@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useCallback, useState } from "react";
-import { ArrowLeft, CopyIcon, ScanQrCodeIcon } from "lucide-react";
+import { CopyIcon, ScanQrCodeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
 import { QRCodeGenerator } from "@/components/qr/qr-generate";
@@ -18,9 +18,8 @@ import {
 
 export default function RecommendPage() {
   const router = useRouter();
-  const [address, setAddress] = useState("");
-  const [receiveRecommendation, setReceiveRecommendation] = useState(true);
   const [to, setTo] = useState("");
+  const [receiveRecommendation, setReceiveRecommendation] = useState(true);
   const [showScanner, setShowScanner] = useState(false);
 
   const onScan = useCallback(
