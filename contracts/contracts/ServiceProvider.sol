@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.24;
 
 import {Reputation} from "./helpers/Reputation.sol";
 import {IWorldID} from "./interfaces/IWorldID.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IServiceProvider} from "./interfaces/IServiceProvider.sol";
+import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 contract ServiceProvider is Reputation, IServiceProvider {
+    using EnumerableSet for EnumerableSet.AddressSet;
+
     uint256 public price;
     address public provider;
     IERC20 public paymentToken;
@@ -15,7 +18,7 @@ contract ServiceProvider is Reputation, IServiceProvider {
 
     /// @dev Mapping from user address to order
     mapping(address => bytes32) public userToGroupId;
-    mapping(bytes32 => address[]) public groupIdToUsers;
+    mapping(bytes32 => EnumerableSet.AddressSet) private groupAddresses;
 
     mapping(address => uint256) public userToRequest;
     mapping(uint256 => ServiceRequest) public requests;
@@ -110,11 +113,11 @@ contract ServiceProvider is Reputation, IServiceProvider {
         bytes32 groupId,
         string calldata encryptedConnectionDetails
     ) public onlyProvider {
-        // TODO: attach user to group
-        // if (userToGroupId[requests[requestId].user] != groupId) {
-        //     groupIdToUsers[groupId].push(requests[requestId].user);
-        //     userToGroupId[requests[requestId].user] = groupId;
-        // }
+        // reassign user group
+        address user = requests[requestId].user;
+        groupAddresses[userToGroupId[user]].remove(user);
+        groupAddresses[groupId].add(user);
+        userToGroupId[user] = groupId;
 
         // fulfill request
         ServiceRequest storage request = requests[requestId];
@@ -142,12 +145,14 @@ contract ServiceProvider is Reputation, IServiceProvider {
 
     /// @inheritdoc IServiceProvider
     function reportGroupId(bytes32 groupId) external {
-        // TODO: users may change groupId
+        uint256 length = groupAddresses[groupId].length();
 
-        // for each order with such a groupId slash reputation of user
-        address[] memory users = groupIdToUsers[groupId];
+        address[] memory users = new address[](length); // Store a snapshot
+        for (uint256 i = 0; i < length; i++) {
+            users[i] = groupAddresses[groupId].at(i);
+        }
 
-        for (uint256 i = 0; i < users.length; i++) {
+        for (uint256 i = 0; i < length; i++) {
             _slashReputation(users[i]);
         }
     }
@@ -189,6 +194,7 @@ contract ServiceProvider is Reputation, IServiceProvider {
         return requests[userToRequest[user]];
     }
 
+    /// @inheritdoc IServiceProvider
     function getUnfulfilledRequests()
         external
         view

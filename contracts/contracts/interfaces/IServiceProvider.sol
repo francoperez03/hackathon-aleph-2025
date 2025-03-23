@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.24;
 
 interface IServiceProviderEvents {
     event NewServiceRequest(
@@ -101,7 +101,15 @@ interface IServiceProvider is
     /// @dev Get balance of the contract
     function balance() external view returns (uint256);
 
+    /// @dev Get service request for user
+    /// @param user The user to get service request for
     function getServiceRequestForUser(
         address user
     ) external view returns (ServiceRequest memory);
+
+    /// @dev Get unfulfilled requests
+    function getUnfulfilledRequests()
+        external
+        view
+        returns (ServiceRequest[] memory);
 }

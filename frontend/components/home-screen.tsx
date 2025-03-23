@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Shield, Zap, Lock, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { executeTransaction } from "@/app/lib/execute-transaction";
 
 interface HomeProps {
   setActiveScreen: (screen: "home" | "connection" | "recommend") => void;
@@ -50,6 +51,13 @@ export function Home({ setActiveScreen }: HomeProps) {
         onClick={() => setActiveScreen("recommend")}
       >
         <UserPlus className="h-5 w-5" />
+      </Button>
+      <Button
+        onClick={() => {
+          executeTransaction().then((x) => console.log("result: ", x));
+        }}
+      >
+        try send transaction
       </Button>
 
       <motion.div

@@ -6,8 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, User, Check, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QRScannerModal } from "./qr/qr-scanner-modal";
-import QRCodeGenerator from "./qr/qr-generate";
-import { MiniKit } from "@worldcoin/minikit-js";
+import { recommend } from "@/app/contracts/service-provider/service-provider";
+import { VerifyBlock } from "./Verify";
 
 interface RecommendProps {
   setActiveScreen: (screen: "home" | "connection" | "recommend") => void;
@@ -104,9 +104,16 @@ export function Recommend({ setActiveScreen }: RecommendProps) {
           type="submit"
           disabled={!address}
           className="w-full bg-[#0088cc] py-4 text-lg font-medium text-white hover:bg-[#0077b3] disabled:bg-[#ccc]"
+          onClick={() => {
+            recommend({ addressToRecommend: address as `0x${string}` }).then(
+              (x) => console.log("recommend response: ", x?.finalPayload)
+            );
+          }}
         >
           Recommend
         </Button>
+         <VerifyBlock />
+
       </form>
 
       <AnimatePresence>
