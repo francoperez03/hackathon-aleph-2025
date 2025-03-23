@@ -72,7 +72,6 @@ export default function RecommendPage() {
               size="lg"
               onClick={() => {
                 setReceiveRecommendation(false);
-                router.push("/");
               }}
             >
               Give recommendation
@@ -137,9 +136,10 @@ export default function RecommendPage() {
             <Button
               className="w-full"
               size="lg"
-              onClick={() =>
-                recommend({ addressToRecommend: to as `0x${string}` })
-              }
+              onClick={() => {
+                recommend({ addressToRecommend: to as `0x${string}` });
+                router.push("/");
+              }}
             >
               Recommend
             </Button>
