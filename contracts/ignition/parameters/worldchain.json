@@ -1,0 +1,11 @@
+{
+  "ServiceProvider": {
+    "WorldId": "0x17B354dD2595411ff79041f930e491A4Df39A278",
+    "AppId": "app_05cd222877791051e33be56bb1112dc4",
+    "ActionId": "verify-recommentacion",
+    "PaymentToken": "0xd242da12AacBeC695Fe91903E8c67Bbe6E1dF4a7",
+    "Price": "1000000000000000000",
+    "ExpirationTime": "86400",
+    "MinReputation": "1"
+  }
+}

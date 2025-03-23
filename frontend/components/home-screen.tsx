@@ -4,31 +4,34 @@ import { motion } from "framer-motion";
 import { Shield, Zap, Lock, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { executeTransaction } from "@/app/lib/execute-transaction";
+import { executeTransaction } from "@/lib/execute-transaction";
 
 interface HomeProps {
   setActiveScreen: (screen: "home" | "connection" | "recommend") => void;
 }
 
+  
+const features = [
+  {
+    icon: <Lock className="h-6 w-6 text-[#0088cc]" />,
+    title: "Privacy",
+    text: "Stay anonymous, your data is yours.",
+  },
+  {
+    icon: <Zap className="h-6 w-6 text-[#0088cc]" />,
+    title: "Speed",
+    text: "Fast, stable, and unrestricted.",
+  },
+  {
+    icon: <Shield className="h-6 w-6 text-[#0088cc]" />,
+    title: "Community",
+    text: "A trusted network for digital freedom.",
+  },
+];
+
 export function Home({ setActiveScreen }: HomeProps) {
   const [featureIndex, setFeatureIndex] = useState(0);
-  const features = [
-    {
-      icon: <Lock className="h-6 w-6 text-[#0088cc]" />,
-      title: "Privacy",
-      text: "Stay anonymous, your data is yours.",
-    },
-    {
-      icon: <Zap className="h-6 w-6 text-[#0088cc]" />,
-      title: "Speed",
-      text: "Fast, stable, and unrestricted.",
-    },
-    {
-      icon: <Shield className="h-6 w-6 text-[#0088cc]" />,
-      title: "Community",
-      text: "A trusted network for digital freedom.",
-    },
-  ];
+
 
   useEffect(() => {
     const interval = setInterval(() => {

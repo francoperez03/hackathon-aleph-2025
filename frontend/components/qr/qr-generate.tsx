@@ -1,34 +1,32 @@
 // components/QRCodeGenerator.tsx
 import React, { useEffect, useMemo, useRef } from "react";
 import QRCodeStyling from "qr-code-styling";
+import { cn } from "@/lib/utils";
 
 type QRCodeGeneratorProps = {
-  text: string;
+  data: string;
   size?: number;
   level?: "L" | "M" | "Q" | "H";
+  className?: string;
 };
 
-const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({
-  text,
-  size = 256
+export const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({
+  data,
+  className,
+  size = 250,
 }) => {
   const ref = useRef(null);
   const qrCode = useMemo(
     () =>
       new QRCodeStyling({
+        type: "canvas",
+        shape: "square",
         width: size,
         height: size,
-        type: "svg",
-        data: text,
+        data: data,
         dotsOptions: {
           color: "#4267b2",
           type: "rounded",
-        },
-        backgroundOptions: {
-          color: "#e9ebee",
-        },
-        imageOptions: {
-          crossOrigin: "anonymous",
         },
       }),
     []
@@ -41,10 +39,10 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({
   }, [qrCode]);
 
   return (
-    <div className="p-4 rounded-2xl shadow-lg bg-gradient-to-br from-[#f5f9ff] to-[#dfeeff] inline-block">
+    <div
+      className={cn("p-4 inline-block border bg-white rounded-md", className)}
+    >
       <div ref={ref} />
     </div>
   );
 };
-
-export default QRCodeGenerator;
