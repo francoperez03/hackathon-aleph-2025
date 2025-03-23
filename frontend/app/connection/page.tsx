@@ -141,6 +141,7 @@ export default function Connection() {
 
     sodium.ready
       .then(() => {
+        setDecrypted("ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpZeGpsS0Z3dGltMWJhOXRvczByeDBO@3.91.104.137:35942/?outline=1")
         console.log({
           a: sodium.from_base64(localStorage.getItem("publicKey") || ""),
           b: sodium.from_base64(localStorage.getItem("privateKey") || ""),
@@ -152,6 +153,7 @@ export default function Connection() {
           sodium.from_base64(localStorage.getItem("publicKey") || ""),
           sodium.from_base64(localStorage.getItem("privateKey") || "")
         );
+        console.log("decrypted", decrypted)
         // setDecrypted(sodium.to_string(decrypted));
         setDecrypted("ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpZeGpsS0Z3dGltMWJhOXRvczByeDBO@3.91.104.137:35942/?outline=1")
       })
