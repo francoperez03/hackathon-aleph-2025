@@ -2,26 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  ArrowLeft,
-  Check,
-  AlertCircle,
-  Clock,
-  Loader,
-  Link,
-} from "lucide-react";
+import { ArrowLeft, Check, AlertCircle, Loader, Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import QRCodeGenerator from "./qr/qr-generate";
-import { MiniKit } from "@worldcoin/minikit-js";
+import { useRouter } from "next/navigation";
 
 type VpnStatus = "active" | "expired" | "missing-recommendations" | "checking";
 type PaymentStatus = "idle" | "loading" | "success" | "error";
 
-interface ConnectionProps {
-  setActiveScreen: (screen: "home" | "connection" | "recommend") => void;
-}
+export default function ConnectionScreen() {
+  const router = useRouter();
 
-export function Connection({ setActiveScreen }: ConnectionProps) {
   const [vpnStatus, setVpnStatus] = useState<VpnStatus>("checking");
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("idle");
   const [remainingDays, setRemainingDays] = useState(0);
@@ -76,7 +66,7 @@ export function Connection({ setActiveScreen }: ConnectionProps) {
     >
       <button
         className="absolute top-6 left-6 flex items-center text-[#0088cc] hover:text-[#0077b3] transition"
-        onClick={() => setActiveScreen("home")}
+        onClick={() => router.push("/")}
       >
         <ArrowLeft className="h-6 w-6" />
       </button>
@@ -191,26 +181,6 @@ export function Connection({ setActiveScreen }: ConnectionProps) {
               {paymentStatus === "success" && <span>Payment Successful</span>}
               {paymentStatus === "error" && <span>Transaction Failed</span>}
             </motion.button>
-          </motion.div>
-        )}
-        {vpnStatus === "missing-recommendations" && (
-          <motion.div
-            className="flex flex-col items-center text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="flex items-center justify-center w-16 h-16 bg-yellow-500 rounded-full mb-4">
-              <Clock className="h-8 w-8 text-white" />
-            </div>
-            <h3 className="text-lg font-bold text-[#333]">
-              More Recommendations Needed
-            </h3>
-            <p className="text-sm text-[#666] mt-1">
-              You need more recommendations to access the VPN.
-            </p>
-            <div>Get recommended!</div>
-            <QRCodeGenerator text={MiniKit.user?.walletAddress ?? "0x"} />
           </motion.div>
         )}
       </div>
