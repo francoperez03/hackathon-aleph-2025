@@ -1,51 +1,36 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AlertCircle, Loader } from "lucide-react";
+import { Button } from "../ui/button";
+import { useCallback } from "react";
+import { requestService } from "@/services/vpn-service-transactions";
+import ConnectionHeader from "../connection/connection-header";
+import { useRouter } from "next/navigation";
 
-interface Props {
-  paymentStatus: string;
-  onPay: () => void;
-}
+export default function VpnExpired() {
+  const router = useRouter();
 
-export default function VpnExpired({ paymentStatus, onPay }: Props) {
+  const onBuyClick = useCallback(() => {
+    requestService({ countryId: "1" });
+  }, []);
+
   return (
     <motion.div
-      className="flex flex-col items-center"
+      className="relative flex h-full w-full flex-col items-center px-6 pt-16 pb-24"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex items-center justify-center w-16 h-16 bg-red-500 rounded-full mb-4">
-        <AlertCircle className="h-8 w-8 text-white" />
+      <ConnectionHeader onBack={() => router.push("/")} />
+      <div className="w-full max-w-xs flex flex-col items-center text-center mb-6">
+        <h1 className="text-xl font-bold text-[#333]">Acquire VPN access</h1>
+        <p className="mt-1 text-xs text-[#666]">Your access expired. Buy now and wait a few seconds to get access.</p>
       </div>
-      <h3 className="text-lg font-bold text-[#333]">VPN is Expired</h3>
-      <p className="text-sm text-[#666] mt-1">You need to buy a VPN access.</p>
 
-      <motion.button
-        className="mt-4 text-white flex items-center justify-center min-w-[220px] h-[50px] text-lg font-normal rounded-lg"
-        initial={{ backgroundColor: "#0088cc" }}
-        animate={{
-          backgroundColor:
-            paymentStatus === "success"
-              ? "#22c55e"
-              : paymentStatus === "error"
-              ? "#ef4444"
-              : "#0088cc",
-        }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        onClick={onPay}
-        disabled={paymentStatus !== "idle"}
-      >
-        {paymentStatus === "idle" && <span>Buy</span>}
-        {paymentStatus === "loading" && (
-          <>
-            <Loader className="h-5 w-5 animate-spin mr-2" /> <span>Processing...</span>
-          </>
-        )}
-        {paymentStatus === "success" && <span>Payment Successful</span>}
-        {paymentStatus === "error" && <span>Transaction Failed</span>}
-      </motion.button>
+      <Button onClick={onBuyClick} variant="default" className="mt-4">
+        Buy for 3USD
+      </Button>
     </motion.div>
   );
 }

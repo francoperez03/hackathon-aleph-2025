@@ -2,20 +2,19 @@
 
 import { motion } from "framer-motion";
 import { Check, Link } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface Props {
   remainingDays: number;
-  startDate: string;
-  endDate: string;
-  paymentStatus: string;
+  startDate: Date;
+  endDate: Date;
+  // paymentStatus: string;
 }
 
 export default function VpnActive({
   remainingDays,
   startDate,
   endDate,
-  paymentStatus,
+  // paymentStatus,
 }: Props) {
   return (
     <motion.div
@@ -32,10 +31,10 @@ export default function VpnActive({
       <div className="flex flex-col items-center mt-6 space-y-2">
         <p className="text-sm text-gray-600">
           Active from{" "}
-          <span className="text-gray-900 font-medium">{startDate}</span> to{" "}
-          <span className="text-gray-900 font-medium">{endDate}</span>
+          <span className="text-gray-900 font-medium">{startDate.toLocaleDateString()}</span> to{" "}
+          <span className="text-gray-900 font-medium">{endDate.toLocaleDateString()}</span>
         </p>
-        <div className="relative w-full max-w-sm h-4 bg-gray-200 rounded-full overflow-hidden">
+        {/* <div className="relative w-full max-w-sm h-4 bg-gray-200 rounded-full overflow-hidden">
           <motion.div
             className="absolute top-0 left-0 h-full bg-green-500 rounded-full"
             style={{ width: `${(remainingDays / 30) * 100}%` }}
@@ -50,7 +49,7 @@ export default function VpnActive({
             }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
           />
-        </div>
+        </div> */}
         <p className="text-base text-gray-700">
           <span className="font-medium">{remainingDays}</span> days remaining
         </p>

@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { recommend } from "@/services/vpnServiceTransactions";
+import { recommend } from "@/services/vpn-service-transactions";
 
 export default function RecommendPage() {
   const router = useRouter();

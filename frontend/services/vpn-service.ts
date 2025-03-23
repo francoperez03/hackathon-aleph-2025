@@ -1,5 +1,7 @@
 import { CONTRACT_ABI, CONTRACT_ADDRESS, RPC_PROVIDER, VpnStatus } from "@/types";
 import { Contract, JsonRpcProvider } from "ethers";
+
+
 export interface ServiceRequest {
   id: bigint;
   user: string;
@@ -13,11 +15,40 @@ export interface ServiceRequest {
 
 export class VpnService {
   private contract: Contract;
-  private provider: JsonRpcProvider;
 
   constructor(provider: JsonRpcProvider = new JsonRpcProvider(RPC_PROVIDER)) {
-    this.provider = provider;
     this.contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+  }
+
+  async getServiceRequestForUser(user: string): Promise<ServiceRequest> {
+    const rawRequest = await this.contract.getServiceRequestForUser(user);
+    const [
+      id,
+      _user,
+      requestServiceId,
+      encryptionKey,
+      encryptedConnectionDetails,
+      timestamp,
+      fulfilled,
+      expiresAt
+    ] = rawRequest;
+
+    const serviceRequest: ServiceRequest = {
+      id,
+      user,
+      serviceId: requestServiceId,
+      encryptionKey,
+      encryptedConnectionDetails,
+      timestamp,
+      fulfilled,
+      expiresAt
+    };
+    return serviceRequest;  
+  }
+
+  async getRecommendationsCount(userAddress: string): Promise<bigint> {
+    const recommendationCount = await this.contract.recommendationsCount(userAddress);
+    return recommendationCount;
   }
 
   async getVpnStatus(userAddress: string, serviceId: bigint): Promise<VpnStatus> {
@@ -61,8 +92,7 @@ export class VpnService {
     return "checking";
   }
 
-  async getRemainingDays(userAddress: string): Promise<number> {
-    const days: bigint = await this.contract.getRemainingDays(userAddress);
-    return Number(days);
-  }
 }
+
+
+export const vpnService = new VpnService();
