@@ -1,6 +1,8 @@
 export const SERVICE_PROVIDER_ADDRESS =
   "0xD8d07E2F2fCd724c8A1cCD8740Fc97779C554317";
 
+export const RPC_PROVIDER = "https://worldchain-mainnet.g.alchemy.com/public"
+
 export const SERVICE_PROVIDER_ABI = [
   {
     inputs: [

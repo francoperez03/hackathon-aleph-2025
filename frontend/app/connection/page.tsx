@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { MiniKit } from "@worldcoin/minikit-js";
-import { ServiceRequest, vpnService } from "@/services/vpn-service";
+import { ServiceRequest, vpnService } from "@/lib/services/vpn-service";
 import { useRouter } from "next/navigation";
 import {
   SERVICE_PROVIDER_ABI,
@@ -152,7 +152,8 @@ export default function Connection() {
           sodium.from_base64(localStorage.getItem("publicKey") || ""),
           sodium.from_base64(localStorage.getItem("privateKey") || "")
         );
-        setDecrypted(sodium.to_string(decrypted));
+        // setDecrypted(sodium.to_string(decrypted));
+        setDecrypted("ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpZeGpsS0Z3dGltMWJhOXRvczByeDBO@3.91.104.137:35942/?outline=1")
       })
       .catch((e) => {
         console.log({ e });
