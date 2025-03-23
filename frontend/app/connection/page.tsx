@@ -136,7 +136,8 @@ export default function Connection() {
     sodium.ready.then(() => {
       console.log({
         a: sodium.from_base64(localStorage.getItem("publicKey") || ""),
-        b: sodium.from_base64(localStorage.getItem("privateKey") || "")
+        b: sodium.from_base64(localStorage.getItem("privateKey") || ""),
+        serviceRequest
       })
 
       if (!serviceRequest) {
@@ -149,6 +150,8 @@ export default function Connection() {
         sodium.from_base64(localStorage.getItem("privateKey") || "")
       );
       setDecrypted(sodium.to_string(decrypted));
+    }).catch(e => {
+      console.log({e})
     })
 
   }, [serviceRequest]);
