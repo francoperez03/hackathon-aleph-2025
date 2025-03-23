@@ -114,7 +114,7 @@ export default function RecommendPage() {
                 <DialogHeader>
                   <DialogTitle>Scan</DialogTitle>
                   <DialogDescription>
-                    Make changes to your profile here. Click save when you're
+                    Make changes to your profile here. Click save when you&apos;re
                     done.
                   </DialogDescription>
                 </DialogHeader>
