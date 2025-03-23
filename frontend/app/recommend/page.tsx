@@ -16,6 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { recommend } from "@/services/vpn-service-transactions";
+import { MiniKit } from "@worldcoin/minikit-js";
 
 export default function RecommendPage() {
   const router = useRouter();
@@ -56,7 +57,7 @@ export default function RecommendPage() {
 
             <QRCodeGenerator
               size={280}
-              data="0x729b0d64181920eE2232A51E6572F2B80b73B6d1"
+              data={MiniKit.user?.walletAddress ?? "0x"}
               className="mt-4"
             />
           </div>
