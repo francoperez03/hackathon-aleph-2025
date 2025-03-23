@@ -70,7 +70,10 @@ export default function RecommendPage() {
             <Button
               className="w-full"
               size="lg"
-              onClick={() => setReceiveRecommendation(false)}
+              onClick={() => {
+                setReceiveRecommendation(false);
+                router.push("/");
+              }}
             >
               Give recommendation
             </Button>
