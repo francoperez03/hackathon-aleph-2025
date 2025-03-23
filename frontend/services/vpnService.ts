@@ -16,6 +16,8 @@ export class VpnService {
       if(recommendationCount === 0n) {
         return "missing-recommendations";
       } else if(recommendationCount >= 1n) {
+        const serviceRequest = await this.contract.getServiceRequestForUser(userAddress);
+        console.log({serviceRequest})
         return "active";
       }
     } catch (err) {
