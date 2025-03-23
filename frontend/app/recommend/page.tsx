@@ -140,7 +140,7 @@ export default function RecommendPage() {
               className="w-full"
               variant="outline"
               size="lg"
-              onClick={() => setReceiveRecommendation(false)}
+              onClick={() => setReceiveRecommendation(true)}
             >
               Back
             </Button>
