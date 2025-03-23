@@ -11,7 +11,12 @@ interface Props {
   paymentStatus: string;
 }
 
-export default function VpnActive({ remainingDays, startDate, endDate, paymentStatus }: Props) {
+export default function VpnActive({
+  remainingDays,
+  startDate,
+  endDate,
+  paymentStatus,
+}: Props) {
   return (
     <motion.div
       className="flex flex-col items-center"
@@ -26,7 +31,8 @@ export default function VpnActive({ remainingDays, startDate, endDate, paymentSt
       <p className="text-sm text-[#666] mt-1">Your VPN is currently active.</p>
       <div className="flex flex-col items-center mt-6 space-y-2">
         <p className="text-sm text-gray-600">
-          Active from <span className="text-gray-900 font-medium">{startDate}</span> to{" "}
+          Active from{" "}
+          <span className="text-gray-900 font-medium">{startDate}</span> to{" "}
           <span className="text-gray-900 font-medium">{endDate}</span>
         </p>
         <div className="relative w-full max-w-sm h-4 bg-gray-200 rounded-full overflow-hidden">
@@ -34,7 +40,10 @@ export default function VpnActive({ remainingDays, startDate, endDate, paymentSt
             className="absolute top-0 left-0 h-full bg-green-500 rounded-full"
             style={{ width: `${(remainingDays / 30) * 100}%` }}
             initial={{
-              width: paymentStatus === "success" ? "0%" : `${(remainingDays / 30) * 100}%`,
+              width:
+                paymentStatus === "success"
+                  ? "0%"
+                  : `${(remainingDays / 30) * 100}%`,
             }}
             animate={{
               width: "100%",
@@ -46,13 +55,13 @@ export default function VpnActive({ remainingDays, startDate, endDate, paymentSt
           <span className="font-medium">{remainingDays}</span> days remaining
         </p>
       </div>
-      <Button
+      <a
         className="mt-4 bg-primary text-white hover:bg-[#0077b3] flex items-center justify-center min-w-[220px] h-[50px] text-lg font-normal rounded-lg"
-        onClick={() => window.open("https://www.google.com", "_blank")}
+        href="https://www.google.com"
       >
         <Link className="h-5 w-5 mr-2" />
         Open VPN Portal
-      </Button>
+      </a>
     </motion.div>
   );
 }
