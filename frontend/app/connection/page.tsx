@@ -48,22 +48,6 @@ export default function Connection() {
         (Date.now() + 30 * 60 * 1000) / 1000
       ).toString();
 
-      // Transfers can also be at most 1 hour in the future.
-      // const permitTransfer = {
-      //   permitted: {
-      //     token: "0x6a5109b1E0078ee6724D334d2aF740C98196A8EB",
-      //     amount: '1000000000000000000000',
-      //   },
-      //   nonce: Date.now().toString(),
-      //   deadline,
-      // }
-
-      // const permitTransferArgsForm = [
-      //   [permitTransfer.permitted.token, permitTransfer.permitted.amount],
-      //   permitTransfer.nonce,
-      //   permitTransfer.deadline,
-      // ]
-
       const res = await MiniKit.commandsAsync.sendTransaction({
         transaction: [
           {
@@ -73,14 +57,6 @@ export default function Connection() {
             args: [1, sodium.to_base64(keypair.publicKey)],
           },
         ],
-        // permit2: [
-        //   {
-        //     spender: SERVICE_PROVIDER_ADDRESS,
-        //     deadline: permitTransfer.deadline,
-        //     nonce: permitTransfer.nonce,
-        //     permitted: permitTransfer.permitted
-        //   }
-        // ]
       });
       console.log({ res });
 
@@ -141,7 +117,9 @@ export default function Connection() {
 
     sodium.ready
       .then(() => {
-        setDecrypted("ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpZeGpsS0Z3dGltMWJhOXRvczByeDBO@3.91.104.137:35942/?outline=1")
+        setDecrypted(
+          "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpZeGpsS0Z3dGltMWJhOXRvczByeDBO@3.91.104.137:35942/?outline=1"
+        );
         console.log({
           a: sodium.from_base64(localStorage.getItem("publicKey") || ""),
           b: sodium.from_base64(localStorage.getItem("privateKey") || ""),
@@ -149,13 +127,22 @@ export default function Connection() {
         });
 
         const decrypted = sodium.crypto_box_seal_open(
-          serviceRequest.encryptedConnectionDetails,
+          sodium.from_base64(serviceRequest.encryptedConnectionDetails),
           sodium.from_base64(localStorage.getItem("publicKey") || ""),
           sodium.from_base64(localStorage.getItem("privateKey") || "")
         );
-        console.log("decrypted", decrypted)
+        console.log("decrypted", decrypted);
         // setDecrypted(sodium.to_string(decrypted));
-        setDecrypted("ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpZeGpsS0Z3dGltMWJhOXRvczByeDBO@3.91.104.137:35942/?outline=1")
+        setDecrypted(
+          "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpZeGpsS0Z3dGltMWJhOXRvczByeDBO@3.91.104.137:35942/?outline=1"
+        );
+
+        // encryptedConnectionDetails: sodium.to_base64(
+        //   sodium.crypto_box_seal(
+        //     key.key,
+        //     sodium.from_base64(r.encryptionKey)
+        //   )
+        // ),
       })
       .catch((e) => {
         console.log({ e });
@@ -204,11 +191,6 @@ export default function Connection() {
     serviceRequest?.fulfilled &&
     serviceRequest.expiresAt > Date.now() / 1000
   ) {
-    // const decrypted = nodeRSA.decryptStringWithRsaPrivateKey({
-    //   text: serviceRequest.encryptedConnectionDetails,
-    //   privateKey: localStorage.getItem("privateKey") as string,
-    // });
-
     return (
       <div className="text-center px-4 py-10 flex flex-col h-screen">
         <div className="flex-1">
@@ -226,8 +208,8 @@ export default function Connection() {
         <div className="flex flex-col">
           <a
             href={decrypted}
+            target="_blank"
             className={cn(buttonVariants({}), "mt-4")}
-            onClick={() => router.push("/recommended")}
           >
             Connect
           </a>
