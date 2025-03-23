@@ -45,7 +45,11 @@ export default function RecommendPage() {
             </div>
 
             <div className="flex items-center justify-center mt-6 relative w-min mx-auto">
-              <span className="text-sm">0x729...6d1</span>
+              <span className="text-sm">
+                {MiniKit.user?.walletAddress.slice(0, 6) +
+                  "..." +
+                  MiniKit.user?.walletAddress.slice(-4)}
+              </span>
               <Button
                 size="icon"
                 variant="ghost"
