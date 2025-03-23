@@ -18,7 +18,6 @@ export default function VpnChecking() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Link className="h-5 w-5 mr-2" />
         Open VPN Portal
       </a>
       <p className="mt-3 text-sm">Checking your VPN access...</p>
