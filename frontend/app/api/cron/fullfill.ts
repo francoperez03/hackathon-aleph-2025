@@ -1,9 +1,8 @@
 import { ethers } from "ethers";
-import { KEYS_POOL } from "../../../../contracts/tasks/service-provider";
-import { generateGroupId } from "../../../../contracts/lib/utils";
 import NodeRSA from "encrypt-rsa";
 import { NextResponse } from "next/server";
 import { CONTRACT_ABI } from "@/types";
+import crypto from "crypto";
 
 const nodeRSA = new NodeRSA();
 const SERVICE_PROVIDER_ADDRESS = "0xeaf070617f52EC79Aad178DeECa7860658dd7506";
@@ -15,6 +14,18 @@ const serviceProvider = new ethers.Contract(
   CONTRACT_ABI,
   provider
 );
+
+function generateGroupId(key: string) {
+  return "0x" + crypto.createHash("sha256").update(key).digest("hex");
+}
+
+const KEYS_POOL = [
+  {
+    ip: "3.91.104.137",
+    key: "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpZeGpsS0Z3dGltMWJhOXRvczByeDBO@3.91.104.137:35942/?outline=1",
+    countryId: "1",
+  },
+];
 
 export default async function handler() {
   try {
