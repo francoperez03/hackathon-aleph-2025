@@ -64,6 +64,9 @@ export default function Connection() {
 
   useEffect(() => {
     const fetchVpnStatus = async () => {
+      const user = MiniKit.user;
+      console.log({ user });
+
       let address = MiniKit.user?.walletAddress;
       if (!address) {
         return;
@@ -98,6 +101,10 @@ export default function Connection() {
 
     return "You have an active connection: " + decrypted;
   }
+
+   if (!serviceRequest?.fulfilled) {
+    return "";
+   }
 
   return (
     <div className="p-10">

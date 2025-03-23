@@ -51,6 +51,15 @@ export default function App() {
         <UserPlus className="h-5 w-5" />
       </Button>
 
+
+      <Button
+        variant="ghost"
+        className="absolute top-6 left-6 w-10 h-10 p-0 bg-primary hover:bg-[#0077b3] text-white shadow-md rounded-md transition-transform active:scale-95"
+        onClick={() => router.push("/connection")}
+      >
+        <UserPlus className="h-5 w-5" />
+      </Button>
+
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
